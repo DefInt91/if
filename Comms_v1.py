@@ -67,7 +67,8 @@ def uptime():
     win.after(200,uptime)
 
 textweight=font.Font(weight=font.BOLD)
-TimeLabel = Label(text = "%s" %(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),),fg='red',font=textweight).place(x=340,y=20)
+TimeLabel = Label(text = "%s" %(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),),fg='red',font=textweight)
+TimeLabel.place(x=340,y=20)
 win.after(100,uptime)
 
 
