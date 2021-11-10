@@ -137,7 +137,7 @@ for i in range(6,10):
 k=80
 
 
-for k in range(80,320,20):
+for k in range(80,340,20):
     ll0=Label(win,text='x=0, y='+ str(k)).place(x=0,y=k)
     k = k + 20
     
@@ -148,10 +148,24 @@ h1=win.winfo_height()
 mylabel=Label(win,textvariable=msglabel).place(x=w1/2-100,y=100)
 
 
-
+#Root cause
+cause_label=Label(win,font=text_size8,text='Root Cause:').place(x=0,y=320)
+cause_varable=StringVar()
+cause_list=ttk.Combobox(win,state='readonly',textvariable=cause_varable,values=(\
+    'Unknown',\
+    'Operator',\
+    'Regular Maintenance',\
+    'Infra',\
+    'Network',\
+    'Internal',\
+    'Internal - 3rd Party',\
+    'Internal - MG+',\
+    'TBC',\
+    'Drill')).place(x=105,y=320)
+cause_varable.set('Unknown')
 
 # Comms_Manager
-Comms_lab=Label(win,font=text_size8,text='Comms Manager:').place(x=0,y=320)
+Comms_lab=Label(win,font=text_size8,text='Comms Manager:').place(x=0,y=340)
 comms_variable=StringVar()
 comms_manager=ttk.Combobox(win,state='readonly',textvariable=comms_variable,values=(\
     'Pick one',\
@@ -160,20 +174,20 @@ comms_manager=ttk.Combobox(win,state='readonly',textvariable=comms_variable,valu
     'Jeff Huang (+886 933 308 768)',\
     'Jill Shen (+886 903 438 345)',\
     'Matt Cheng (+886 932 075 280)',\
-    'Matthew Geoghegan (+886 905 249 541)')).place(x=105,y=320)
+    'Matthew Geoghegan (+886 905 249 541)')).place(x=105,y=340)
 comms_variable.set('Pick one')
 
 
         
 # Crisis_Manager
-crisis_lab=Label(win,font=text_size8,text='Crisis Manager: ').place(x=0,y=340)
+crisis_lab=Label(win,font=text_size8,text='Crisis Manager: ').place(x=0,y=360)
 crisis_variable=StringVar()
-# crisis_lab2=Label(win,font=text_size8,textvariable=comms_variable).place(x=245,y=340)
-crisis_entry=Entry(win,font=text_size8,textvariable=crisis_variable).place(x=105,y=340)
+# crisis_lab2=Label(win,font=text_size8,textvariable=comms_variable).place(x=245,y=360)
+crisis_entry=Entry(win,font=text_size8,textvariable=crisis_variable).place(x=105,y=360)
 crisis_variable.set('Null or Fill in')
 
 # ITOC member
-ITOC_lab=Label(win,font=text_size10,text='Escalated by:').place(x=0,y=360)
+ITOC_lab=Label(win,font=text_size10,text='Escalated by:').place(x=0,y=380)
 ITOC_variable=StringVar()
 ITOC_manager=ttk.Combobox(win,textvariable=ITOC_variable,values=(\
     'Acise Lee',\
@@ -183,7 +197,7 @@ ITOC_manager=ttk.Combobox(win,textvariable=ITOC_variable,values=(\
     'Jiajin Kang',\
     'Jin Yang',\
     'Joy Huang',\
-    'Ray Duan')).place(x=105,y=360)
+    'Ray Duan')).place(x=105,y=380)
 ITOC_variable.set('Pick or Input')
 
 # clik Number
@@ -191,9 +205,9 @@ ITOC_variable.set('Pick or Input')
 def to_uppercase(*args):
     clik_variable.set(clik_variable.get().upper())
 clik_variable=StringVar()
-clik_lab=Label(win,font=text_size10,text='Clik ID:').place(x=0,y=380)
+clik_lab=Label(win,font=text_size10,text='Clik ID:').place(x=0,y=400)
 # 輸入框 https://jennaweng0621.pixnet.net/blog/post/403560362-%5Bpython%5D-tkinter-%E6%96%87%E5%AD%97%E6%A1%86%28entry%29
-clik_entry=Entry(win,textvariable=clik_variable).place(x=105,y=380)
+clik_entry=Entry(win,textvariable=clik_variable).place(x=105,y=400)
 clik_variable.trace_add('write', to_uppercase)
 
 
@@ -201,14 +215,14 @@ clik_variable.trace_add('write', to_uppercase)
 def to_uppercase(*args):
     ref_variable.set(ref_variable.get().upper())
 ref_variable=StringVar()
-ref_lab=Label(win,font=text_size10,text='Ref#').place(x=0,y=400)
-ref_entry=Entry(win,textvariable=ref_variable).place(x=105,y=400)
+ref_lab=Label(win,font=text_size10,text='Ref#').place(x=0,y=420)
+ref_entry=Entry(win,textvariable=ref_variable).place(x=105,y=420)
 ref_variable.trace_add('write', to_uppercase)
 
 # Teams URL
 teams_variable=StringVar()
-teams_lab=Label(win,font=text_size10,text='Teams Chat: ').place(x=0,y=420)
-teams_entry=Entry(win,textvariable=teams_variable).place(x=105,y=420)
+teams_lab=Label(win,font=text_size10,text='Teams Chat: ').place(x=0,y=440)
+teams_entry=Entry(win,textvariable=teams_variable).place(x=105,y=440)
 
 #TEXT物件
 # mes=tk.Text(win, width=50, height=3)
@@ -241,7 +255,7 @@ def copy_comms ():
         "\nService Degradation: 25% " + \
         "\nSymptoms: GPM degradation on TEG0 " + \
         "\nAction Taken: ITOC is checking with client. " + \
-        "\nRoot Cause: "+ \
+        "\nRoot Cause: "+ cause_varable.get() + \
         "\nComms Manager: " + comms_variable.get() + \
         "\nCrisis Manager: " + crisis_variable.get() +  \
         "\nEscalated by: "+ ITOC_variable.get() + " (+886 226 560 700 ext 207) "+ \
@@ -259,6 +273,7 @@ def clear_All(): #https://stackoom.com/question/3mvSR https://stackoverflow.com/
     
     status_variable.set('New')
     sev_variable.set('A')
+    cause_varable.set('Unknown')
     comms_variable.set('Pick one')
     crisis_variable.set('Null or Fill in')
     clik_variable.set('')
