@@ -1,7 +1,7 @@
 import datetime
 import tkinter as tk
 from tkinter import messagebox
-from os import set_inheritable
+from os import read, set_inheritable
 from tkinter import *
 from tkinter import font, ttk
 
@@ -20,7 +20,7 @@ win.resizable(0, 0)  # 固定大小,不能縮放
 
 win.config(background="#f1f1f1")  # 顏名or 16進制 #000000
 
-win.attributes("-alpha", 0.9)  # 透明度1~0, 1=不透明
+win.attributes("-alpha", 1)  # 透明度1~0, 1=不透明
 
 win.attributes("-topmost", 1)  # 置頂
 # =====================================================================
@@ -65,11 +65,12 @@ win.attributes("-topmost", 1)  # 置頂
 
 
 # 字型 控制 https://www.delftstack.com/zh-tw/howto/python-tkinter/how-to-change-the-tkinter-label-font-size/
-text_B = font.Font(weight=font.BOLD)  # 粗體
-size10_B = font.Font(size=10, weight=font.BOLD)  # 字體大小&粗體
-size8_B = font.Font(size=8, weight=font.BOLD)  # 字體大小&粗體
-size10 = font.Font(size=10)
-size12 = font.Font(size=12)
+text_B = font.Font(family='Arial',weight=font.BOLD)  # 粗體
+size10_B = font.Font(family='Arial',size=10, weight=font.BOLD)  # 字體大小&粗體
+size8 = font.Font(family='Arial',size=8)
+size8_B = font.Font(family='Arial',size=8, weight=font.BOLD)  # 字體大小&粗體
+size10 = font.Font(family='Arial',size=10)
+size12 = font.Font(family='Arial',size=12,weight=font.BOLD)
 
 # 時間日期 https://www.codeprj.com/zh/blog/b7ac791.html
 def uptime():
@@ -116,8 +117,8 @@ def ch_sys():
 
 
 HO = []
-sysall = ['TEG0', 'TEG1', 'TEG2', 'TEG3', 'TEG4', 'TEG6', 'Sem', 'B2C', 'QF2', 'LD' ]
-chva = ['TEG0', 'TEG1', 'TEG2', 'TEG3', 'TEG4', 'TEG6', 'Sempris', 'TNGQuickfire', 'QF2', 'Live Dealer']
+sysall = ['TEG0', 'TEG1', 'TEG2', 'TEG3', 'TEG4', 'TEG6', 'Sem', 'B2C', 'QF2', 'LD' ,'MGP SW']
+chva = ['TEG0', 'TEG1', 'TEG2', 'TEG3', 'TEG4', 'TEG6', 'Sempris', 'TNGQuickfire', 'QF2', 'Live Dealer', 'MGP SW']
 msglabel = StringVar()
 for i in range(0, 6):
     num = IntVar()
@@ -126,7 +127,7 @@ for i in range(0, 6):
     mychkbtn = Checkbutton(win, text=sysall[i], variable=HO[i],command=ch_sys, onvalue=1, offvalue=0).place(x=140+(i*60), y=40)
 
 j = 0
-for i in range(6, 10):
+for i in range(6, 11):
     num = IntVar()
     # print(num)
     HO.append(num)
@@ -144,10 +145,11 @@ w1 = win.winfo_width()
 h1 = win.winfo_height()
 # print(str(w1)) 結果為500
 
-Sys_label0 = Label(win, font=size8_B, text="Choice Affected System:").place(x=0, y=40)
+Sys_label0 = Label(win, font=size8_B, text="Affected System:").place(x=0, y=40)
 # Sys_label1 = Label(win, textvariable=msglabel, text="Choice Affected System:").place(x=w1/2-100, y=100)
 
 # Name
+
 # Tier
 tier_lab=Label(win, font=size8_B, text='Tier:').place(x=0, y=120)
 tier_variable = StringVar()
@@ -160,43 +162,93 @@ operator_variable = StringVar()
 operator_lab = Label(win, font=size8_B, text="Operator:").place(x=0, y=140)
 operator_lab = Label(win, font=size8_B, textvariable=msglabel).place(x=0, y=160)
 
+
+
+
+
 # Time Elapsed/ Start Time/ End Time/ Service Degradation /Symptoms
 ti = []
 title_all = ['Time Elapsed:', 'Start Time:',
              'End Time:', 'Service Degradation:', 'Symptoms:']
 ti_lab = StringVar()
-hh = 0
+xx = 0
 for h in range(180, 280, 20):
-    tii = Label(win, font=size8_B, text=title_all[hh]).place(x=0, y=h)
+    tii = Label(win, font=size8_B, text=title_all[xx]).place(x=0, y=h)
     h = h + 20
-    hh += 1
+    xx += 1
 
 # Time Elapsed 缺計算時間
 elapsed_variable = StringVar()
 elapsed_lab = Label(win, textvariable=elapsed_variable).place(x=105, y=180)
 elapsed_variable.set('HH hr(s) MM Min(s)')
 
+#只能輸入數字 https://shengyu7697.github.io/python-tkinter-entry-number-only/
+def validate(P):
+    # print(P)
+    if str.isdigit(P):
+        return True
+    else:
+        return False
+vcmd = (win.register(validate), '%P')
+
+
+dds=[] # 01-31 days
+for ds in range(1,32,1):
+    dds.append(ds)
+    ds+=1
+
+mms=[] # 00-59 mins
+for ms in range(0,60,1):
+    mms.append(ms)
+    ms+=1
+    # print(mms)
+
+hhs=[] # 00-24 hrs
+for hs in range(00,24,1):
+    hhs.append(hs)
+    hs+=1
+    # print(hhs)
+
 # # Start Time 缺計算時間
+sTe0 = IntVar()
 sTe1 = IntVar()
 sTe2 = IntVar()
-GMT_lab = Label(win, font=size10, text='GMT+8').place(x=170, y=200)
-start_lab = Label(win, font=size12, text=':').place(x=130, y=195)
-start_Time_entry1 = Entry(win, font=size10, width=3).place(x=105, y=200)
-start_Time_entry2 = Entry(win, font=size10, width=3).place(x=145, y=200)
+start_lab = Label(win, font=size12, text=':').place(x=190, y=195)
+GMT_lab = Label(win, font=size10, text='GMT+8').place(x=243, y=200)
+start_Time_entry0=ttk.Combobox(win, values=dds,width=3,textvariable=sTe0).place(x=105, y=200)
+start_Time_entry1=ttk.Combobox(win, values=hhs,width=3,textvariable=sTe1).place(x=150, y=200)
+start_Time_entry2=ttk.Combobox(win, values=hhs,width=3,textvariable=sTe2).place(x=203, y=200)
+
+sTe0.set(datetime.datetime.now().strftime('%d'))
+sTe1.set(datetime.datetime.now().strftime('%H'))
+sTe2.set(datetime.datetime.now().strftime('%M'))
+
 
 # # End Time 缺計算時間
+eTe0 = IntVar()
 eTe1 = IntVar()
 eTe2 = IntVar()
-GMT_lab = Label(win, font=size10, text='GMT+8').place(x=170, y=220)
-end_lab = Label(win, font=size12, text=':').place(x=130, y=215)
-end_Time_entry1 = Entry(win, font=size10, width=3).place(x=105, y=220)
-end_Time_entry2 = Entry(win, font=size10, width=3).place(x=145, y=220)
+end_lab = Label(win, font=size12, text=':').place(x=190, y=215)
+GMT_lab = Label(win, font=size10, text='GMT+8').place(x=243, y=220)
+# end_Time_entry0 = Entry(win, font=size10, textvariable=eTe0, width=3, validate='key', validatecommand=vcmd).place(x=105, y=220)
+# end_Time_entry1 = Entry(win, font=size10, textvariable=eTe1, width=3, validate='key', validatecommand=vcmd).place(x=135, y=220)
+# end_Time_entry2 = Entry(win, font=size10, textvariable=eTe2, width=3, validate='key', validatecommand=vcmd).place(x=175, y=220)
+end_Time_entry0=ttk.Combobox(win, values=dds,width=3,textvariable=eTe0).place(x=105, y=220)
+end_Time_entry1=ttk.Combobox(win, values=hhs,width=3,textvariable=eTe1).place(x=150, y=220)
+end_Time_entry2=ttk.Combobox(win, values=hhs,width=3,textvariable=eTe2).place(x=203, y=220)
+eTe0.set(datetime.datetime.now().strftime('%d'))
+eTe1.set(datetime.datetime.now().strftime('%H'))
+eTe2.set(datetime.datetime.now().strftime('%M'))
+
 
 # Service Degradation
+def to_uppercase(*args):
+    service_variable.set(service_variable.get().upper())
 service_variable = StringVar()
-service_lab = Label(win, text=' %').place(x=150, y=240)
-service_entry = Entry(win, font=size8_B, width=4).place(x=125, y=240)
+service_lab = Label(win, text=' %').place(x=150, y=241)
+service_entry = Entry(win, font=size8_B, textvariable=service_variable, width=4).place(x=125, y=242)
 service_variable.set('N/A')
+service_variable.trace_add('write', to_uppercase)
 
 # Symptoms
 symptoms_variable = StringVar()
@@ -206,8 +258,6 @@ symptoms_entry = Entry(win, font=size8_B, width=64).place(x=105, y=260)
 action_lab = Label(win, font=size8_B, text='Action Taken:').place(x=0, y=280)
 action_variable = StringVar()
 action_text = Text(win, font=size8_B).place(x=105, y=280, width=390, height=20)
-
-
 action_list = ttk.Combobox(win, width=50, textvariable=action_variable, values=('ITOC is contacting relevant teams.', 'ITOC is checking with client.', 'Engineers are investigating.')).place(x=105, y=300, height=20)
 action_variable.set('How is it now?')
 
@@ -228,7 +278,7 @@ cause_list = ttk.Combobox(win, state='readonly', textvariable=cause_variable, va
 cause_variable.set('Unknown')
 
 # Comms_Manager
-Comms_lab = Label(win, font=size8_B,text='Comms Manager:').place(x=0, y=340)
+Comms_lab = Label(win, font=size8_B,text='Comms Manager:',fg='red').place(x=0, y=340)
 comms_variable = StringVar()
 comms_manager = ttk.Combobox(win, state='readonly', textvariable=comms_variable, values=(
     'Abri Liebenberg (+61 4 3282 3087)',
@@ -244,11 +294,11 @@ comms_variable.set('Pick one')
 crisis_lab = Label(win, font=size8_B,text='Crisis Manager: ').place(x=0, y=360)
 crisis_variable = StringVar()
 # crisis_lab2=Label(win,font=size8_B,textvariable=comms_variable).place(x=245,y=360)
-crisis_entry = Entry(win, font=size8_B, textvariable=crisis_variable).place(x=105, y=360)
+crisis_entry = Entry(win, font=size8_B, textvariable=crisis_variable).place(x=105, y=361)
 crisis_variable.set('Null or Fill in')
 
 # ITOC member
-ITOC_lab = Label(win, font=size10_B, text='Escalated by:').place(x=0, y=380)
+ITOC_lab = Label(win, font=size10_B, text='Escalated by:',fg='red').place(x=0, y=380)
 ITOC_variable = StringVar()
 ITOC_manager = ttk.Combobox(win, textvariable=ITOC_variable, values=(
     'Acise Lee',
@@ -286,47 +336,57 @@ teams_lab = Label(win, font=size8_B, text='Teams Chat: ').place(x=0, y=440)
 teams_entry = Entry(win, textvariable=teams_variable).place(x=105, y=440)
 teams_variable.set('N/A')
 
+
 # TEXT物件
 # mes=tk.Text(win, width=50, height=3)
 # mes.insert("insert", "未選擇")
 # mes.pack()
 def copy_comms():
     win.clipboard_clear()
+
+    sv=service_variable.get()
+    if sv.isdigit() :
+        service_variable.set(service_variable.get()+' %')
+        
+
+    if cause_variable.get() == 'Regular Maintenance':
+        teams_variable.set('N/A')
+
     if comms_variable.get() == 'Pick one':
-        messagebox.showerror('Pick one please!', 'Choice a Manager')
+        messagebox.showerror('Pick one please!', 'Chooce a Manager')
 
     if crisis_variable.get() == 'Null or Fill in':
         crisis_variable_X = comms_variable.get()
         crisis_variable.set(crisis_variable_X)
 
     if ITOC_variable.get() == 'Pick or Input':
-        messagebox.showerror('Hey! ITOC', 'Who you are?')
+        messagebox.showerror('Hey! ITOC', 'Who are you?')
 
-    if cause_variable.get() == 'Regular Maintenance':
-        teams_variable.set('N/A')
-
+# https://pyformat.info/ 數字補零格式化
     all_sen = \
         "Status: " + status_variable.get() +\
         "\nSeverity: " + sev_variable.get() +\
         "\nName: " + msglabel.get() +\
-        "\nTier: " + tier_variable.get +\
+        "\nTier: " + tier_variable.get() +\
         "\nOperator: Power_Asia, FCM88, TOP_USD2, Asia888, Poseidon, TH1GAMES, TOP_USD(GAMA), MaxPro, Metaltex" +\
         "\nTime Elapsed: 10 mins " +\
-        "\nStart Time: " + datetime.datetime.now().strftime('%Y-%m-%d') + " (GMT+8)" +\
-        "\nEnd Time: " + datetime.datetime.now().strftime('%Y-%m-%d') + " (GMT+8)" +\
+        "\nStart Time: " + datetime.datetime.now().strftime('%Y-%m-') + '{:02d}'.format(sTe0.get()) + ' ' + '{:02d}'.format(sTe1.get()) + ':' + '{:02d}'.format(sTe2.get()) + " (GMT+8)" +\
+        "\nEnd Time: " + datetime.datetime.now().strftime('%Y-%m-') + '{:02d}'.format(eTe0.get()) + ' ' + '{:02d}'.format(eTe1.get()) + ':' + '{:02d}'.format(eTe2.get()) + " (GMT+8)" +\
         "\nService Degradation: " + service_variable.get() +\
         "\nSymptoms: GPM degradation on TEG0 " +\
-        "\nAction Taken: ITOC is checking with client. " +\
+        "\nAction Taken: " + action_variable.get() +\
         "\nRoot Cause: " + cause_variable.get() +\
         "\nComms Manager: " + comms_variable.get() +\
         "\nCrisis Manager: " + crisis_variable.get() +\
-        "\nEscalated by: " + ITOC_variable.get() + " (+886 226 560 700 ext 207) " +\
+        "\nEscalated by: " + ITOC_variable.get() + " (+886 226 560 700 ext 207)" +\
         "\n" +\
         "\nClik ID: " + clik_variable.get() +\
         "\nCustomer Ref#: " + ref_variable.get() +\
         "\n" +\
         "\nJoin Microsoft Teams Chat: " + teams_variable.get()
     win.clipboard_append(all_sen) # This is the process of copying to the clipboard
+    
+
 
 def clear_All():  # https://stackoom.com/question/3mvSR https://stackoverflow.com/questions/37171478/how-to-deselect-checkboxes-using-a-button-in-python
     i = 0
@@ -343,7 +403,7 @@ def clear_All():  # https://stackoom.com/question/3mvSR https://stackoverflow.co
     # end
     service_variable.set('N/A')
     # symptoms
-    # action
+    action_variable.set('How is it now?')
     cause_variable.set('Unknown')
     comms_variable.set('Pick one')
     crisis_variable.set('Null or Fill in')
