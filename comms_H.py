@@ -509,8 +509,12 @@ def clear_All():  # https://stackoom.com/question/3mvSR https://stackoverflow.co
     tier_variable.set('Tier_1')
     # operator
     # elapsed
-    # start
-    # end
+    sTed.set(datetime.datetime.now().strftime('%d'))
+    sTeh.set(datetime.datetime.now().strftime('%H'))
+    sTem.set(datetime.datetime.now().strftime('%M'))
+    eTed.set(datetime.datetime.now().strftime('%d'))
+    eTeh.set(datetime.datetime.now().strftime('%H'))
+    eTem.set(datetime.datetime.now().strftime('%M'))
     service_variable.set('N/A')
     # symptoms
     action_variable.set('How is it now?')
