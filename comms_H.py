@@ -96,6 +96,7 @@ srabtn0 = Radiobutton(win, text='New', variable=status_variable, value='New').pl
 srabtn1 = Radiobutton(win, text='Resolved', variable=status_variable, value='Resolved').place(x=100, y=0)
 srabtn2 = Radiobutton(win, text='On Hold', variable=status_variable, value='On Hold').place(x=180, y=0)
 srabtn3 = Radiobutton(win, text='Re-occurring', variable=status_variable, value='Re-occurring').place(x=260, y=0)
+srabtn4 = Radiobutton(win, text='New/Resolved', variable=status_variable, value='New / Resolved').place(x=360, y=0)
 
 
 # Severity
@@ -135,7 +136,7 @@ for i in range(6, 11):
     j += 1
 
 
-k = 80
+# k = 80
 # for k in range(80, 340, 20):
 #     ll0 = Label(win, text='x=0, y=' + str(k)).place(x=0, y=k)
 #     k = k + 20
@@ -177,10 +178,7 @@ for h in range(180, 280, 20):
     h = h + 20
     xx += 1
 
-# Time Elapsed 缺計算時間
-elapsed_variable = StringVar()
-elapsed_lab = Label(win, textvariable=elapsed_variable).place(x=105, y=180)
-elapsed_variable.set('HH hr(s) MM Min(s)')
+
 
 #只能輸入數字 https://shengyu7697.github.io/python-tkinter-entry-number-only/
 def validate(P):
@@ -210,35 +208,144 @@ for hs in range(00,24,1):
     # print(hhs)
 
 # # Start Time 缺計算時間
-sTe0 = IntVar()
-sTe1 = IntVar()
-sTe2 = IntVar()
+sTed = IntVar()
+sTeh = IntVar()
+sTem = IntVar()
 start_lab = Label(win, font=size12, text=':').place(x=190, y=195)
 GMT_lab = Label(win, font=size10, text='GMT+8').place(x=243, y=200)
-start_Time_entry0=ttk.Combobox(win, values=dds,width=3,textvariable=sTe0).place(x=105, y=200)
-start_Time_entry1=ttk.Combobox(win, values=hhs,width=3,textvariable=sTe1).place(x=150, y=200)
-start_Time_entry2=ttk.Combobox(win, values=hhs,width=3,textvariable=sTe2).place(x=203, y=200)
+start_Time_entry0=ttk.Combobox(win, values=dds,width=3,textvariable=sTed).place(x=105, y=200)
+start_Time_entry1=ttk.Combobox(win, values=hhs,width=3,textvariable=sTeh).place(x=150, y=200)
+start_Time_entry2=ttk.Combobox(win, values=mms,width=3,textvariable=sTem).place(x=203, y=200)
 
-sTe0.set(datetime.datetime.now().strftime('%d'))
-sTe1.set(datetime.datetime.now().strftime('%H'))
-sTe2.set(datetime.datetime.now().strftime('%M'))
+sTed.set(datetime.datetime.now().strftime('%d'))
+sTeh.set(datetime.datetime.now().strftime('%H'))
+sTem.set(datetime.datetime.now().strftime('%M'))
 
 
 # # End Time 缺計算時間
-eTe0 = IntVar()
-eTe1 = IntVar()
-eTe2 = IntVar()
+eTed = IntVar()
+eTeh = IntVar()
+eTem = IntVar()
 end_lab = Label(win, font=size12, text=':').place(x=190, y=215)
 GMT_lab = Label(win, font=size10, text='GMT+8').place(x=243, y=220)
-# end_Time_entry0 = Entry(win, font=size10, textvariable=eTe0, width=3, validate='key', validatecommand=vcmd).place(x=105, y=220)
-# end_Time_entry1 = Entry(win, font=size10, textvariable=eTe1, width=3, validate='key', validatecommand=vcmd).place(x=135, y=220)
-# end_Time_entry2 = Entry(win, font=size10, textvariable=eTe2, width=3, validate='key', validatecommand=vcmd).place(x=175, y=220)
-end_Time_entry0=ttk.Combobox(win, values=dds,width=3,textvariable=eTe0).place(x=105, y=220)
-end_Time_entry1=ttk.Combobox(win, values=hhs,width=3,textvariable=eTe1).place(x=150, y=220)
-end_Time_entry2=ttk.Combobox(win, values=hhs,width=3,textvariable=eTe2).place(x=203, y=220)
-eTe0.set(datetime.datetime.now().strftime('%d'))
-eTe1.set(datetime.datetime.now().strftime('%H'))
-eTe2.set(datetime.datetime.now().strftime('%M'))
+# end_Time_entry0 = Entry(win, font=size10, textvariable=eTed, width=3, validate='key', validatecommand=vcmd).place(x=105, y=220)
+# end_Time_entry1 = Entry(win, font=size10, textvariable=eTeh, width=3, validate='key', validatecommand=vcmd).place(x=135, y=220)
+# end_Time_entry2 = Entry(win, font=size10, textvariable=eTem, width=3, validate='key', validatecommand=vcmd).place(x=175, y=220)
+end_Time_entry0=ttk.Combobox(win, values=dds,width=3,textvariable=eTed).place(x=105, y=220)
+end_Time_entry1=ttk.Combobox(win, values=hhs,width=3,textvariable=eTeh).place(x=150, y=220)
+end_Time_entry2=ttk.Combobox(win, values=mms,width=3,textvariable=eTem).place(x=203, y=220)
+eTed.set(datetime.datetime.now().strftime('%d'))
+eTeh.set(datetime.datetime.now().strftime('%H'))
+eTem.set(datetime.datetime.now().strftime('%M'))
+
+
+dd=datetime.timedelta(days=1)
+hh=datetime.timedelta(hours=1)
+mm=datetime.timedelta(minutes=1)
+
+day_now=datetime.datetime.now()
+print(day_now)
+
+
+
+
+
+def elapsed():
+    global elapsed_lab
+    elapsed_lab.config(text= '%s' % elapsed_variable.get())
+    dd=datetime.timedelta(days=1)
+    hh=datetime.timedelta(hours=1)
+    mm=datetime.timedelta(minutes=1)
+
+    day_now=datetime.datetime.now()
+    day_count =IntVar()
+    day_count=0
+    hour_count =IntVar()
+    hour_count=0
+    min_count =IntVar()
+    min_count=0
+    for dt in range(sTed.get(),int(eTed.get()),1):
+        day_now=day_now+dd
+        day_count+=1
+    for ht in range(int(sTeh.get()),int(eTeh.get()),1):
+        day_now=day_now+hh
+        hour_count+=1
+    for mt in range(int(sTem.get()),int(eTem.get()),1):
+        day_now=day_now+mm
+        min_count+=1
+    if eTed.get()-sTed.get() == 0:
+        if eTeh.get()-sTeh.get() == 0:
+            if eTem.get()-sTem.get() == 0:
+                elapsed_variable.set(str(min_count) + ' min ')
+            elif eTem.get()-sTem.get() == 1:
+                elapsed_variable.set(str(min_count) + ' min ')
+            elif eTem.get()-sTem.get() > 1:
+                elapsed_variable.set(str(min_count) + ' mins ')
+        elif eTeh.get()-sTeh.get() == 1:
+            if eTem.get()-sTem.get() == 0:
+                elapsed_variable.set(str(hour_count)+ ' hr ')
+            elif eTem.get()-sTem.get() == 1:
+                elapsed_variable.set(str(hour_count)+ ' hr ' + str(min_count) + ' min ')
+            elif eTem.get()-sTem.get() > 1:
+                elapsed_variable.set(str(hour_count)+ ' hr ' + str(min_count) + ' mins ')
+        elif eTeh.get()-sTeh.get() > 1:
+            if eTem.get()-sTem.get() == 0:
+                elapsed_variable.set(str(hour_count)+ ' hrs ')
+            elif eTem.get()-sTem.get() == 1:
+                elapsed_variable.set(str(hour_count)+ ' hrs ' + str(min_count) + ' min ')
+            elif eTem.get()-sTem.get() > 1:
+                elapsed_variable.set(str(hour_count)+ ' hrs ' + str(min_count) + ' mins ')
+    elif eTed.get()-sTed.get() == 1:
+        if eTeh.get()-sTeh.get() == 0:
+            if eTem.get()-sTem.get() == 0:
+                elapsed_variable.set(str(day_count) + ' day ')
+            elif eTem.get()-sTem.get() == 1:
+                elapsed_variable.set(str(day_count) + ' day ' + str(min_count) + ' min ')
+            elif eTem.get()-sTem.get() > 1:
+                elapsed_variable.set(str(day_count) + ' day ' + str(min_count) + ' mins ')
+        elif eTeh.get()-sTeh.get() == 1:
+            if eTem.get()-sTem.get() == 0:
+                elapsed_variable.set(str(day_count) + ' day ' + str(hour_count)+ ' hr ')
+            elif eTem.get()-sTem.get() == 1:
+                elapsed_variable.set(str(day_count) + ' day ' + str(hour_count)+ ' hr ' + str(min_count) + ' min ')
+            elif eTem.get()-sTem.get() > 1:
+                elapsed_variable.set(str(day_count) + ' day ' + str(hour_count)+ ' hr ' + str(min_count) + ' mins ')
+        elif eTeh.get()-sTeh.get() > 1:
+            if eTem.get()-sTem.get() == 0:
+                elapsed_variable.set(str(day_count) + ' day ' + str(hour_count)+ ' hrs ')
+            elif eTem.get()-sTem.get() == 1:
+                elapsed_variable.set(str(day_count) + ' day ' + str(hour_count)+ ' hrs ' + str(min_count) + ' min ')
+            elif eTem.get()-sTem.get() > 1:
+                elapsed_variable.set(str(day_count) + ' day ' + str(hour_count)+ ' hrs ' + str(min_count) + ' mins ')
+    elif eTed.get()-sTed.get() > 1:
+        if eTeh.get()-sTeh.get() == 0:
+            if eTem.get()-sTem.get() == 0:
+                elapsed_variable.set(str(day_count) + ' days ')
+            elif eTem.get()-sTem.get() == 1:
+                elapsed_variable.set(str(day_count) + ' days ' + str(hour_count) + ' min ')
+            elif eTem.get()-sTem.get() > 1:
+                elapsed_variable.set(str(day_count) + ' days ' + str(hour_count) + ' mins ')
+        elif eTeh.get()-sTeh.get() == 1:
+            if eTem.get()-sTem.get() == 0:
+                elapsed_variable.set(str(day_count) + ' days ' + str(hour_count)+ ' hr ')
+            elif eTem.get()-sTem.get() == 1:
+                elapsed_variable.set(str(day_count) + ' days ' + str(hour_count)+ ' hr ' + str(min_count) + ' min ')
+            elif eTem.get()-sTem.get() > 1:
+                elapsed_variable.set(str(day_count) + ' days ' + str(hour_count)+ ' hr ' + str(min_count) + ' mins ')
+        elif eTeh.get()-sTeh.get() > 1:
+            if eTem.get()-sTem.get() == 0:
+                elapsed_variable.set(str(day_count) + ' days ' + str(hour_count)+ ' hrs ')
+            elif eTem.get()-sTem.get() == 1:
+                elapsed_variable.set(str(day_count) + ' days ' + str(hour_count)+ ' hrs ' + str(min_count) + ' min ')
+            elif eTem.get()-sTem.get() > 1:
+                elapsed_variable.set(str(day_count) + ' days ' + str(hour_count)+ ' hrs ' + str(min_count) + ' mins ')
+    win.after(200, elapsed)
+
+# Time Elapsed 缺計算時間
+elapsed_variable = StringVar()
+elapsed_lab = Label(win, text='%s' % elapsed_variable.get())
+elapsed_lab.place(x=105, y=179)
+win.after(100,elapsed)
 
 
 # Service Degradation
@@ -254,7 +361,7 @@ service_variable.trace_add('write', to_uppercase)
 symptoms_variable = StringVar()
 symptoms_entry = Entry(win, font=size8_B, width=64).place(x=105, y=260)
 
-# Action Taken y=280-300
+# Action Taken 
 action_lab = Label(win, font=size8_B, text='Action Taken:').place(x=0, y=280)
 action_variable = StringVar()
 action_text = Text(win, font=size8_B).place(x=105, y=280, width=390, height=20)
@@ -361,6 +468,9 @@ def copy_comms():
 
     if ITOC_variable.get() == 'Pick or Input':
         messagebox.showerror('Hey! ITOC', 'Who are you?')
+    
+
+
 
 # https://pyformat.info/ 數字補零格式化
     all_sen = \
@@ -369,9 +479,9 @@ def copy_comms():
         "\nName: " + msglabel.get() +\
         "\nTier: " + tier_variable.get() +\
         "\nOperator: Power_Asia, FCM88, TOP_USD2, Asia888, Poseidon, TH1GAMES, TOP_USD(GAMA), MaxPro, Metaltex" +\
-        "\nTime Elapsed: 10 mins " +\
-        "\nStart Time: " + datetime.datetime.now().strftime('%Y-%m-') + '{:02d}'.format(sTe0.get()) + ' ' + '{:02d}'.format(sTe1.get()) + ':' + '{:02d}'.format(sTe2.get()) + " (GMT+8)" +\
-        "\nEnd Time: " + datetime.datetime.now().strftime('%Y-%m-') + '{:02d}'.format(eTe0.get()) + ' ' + '{:02d}'.format(eTe1.get()) + ':' + '{:02d}'.format(eTe2.get()) + " (GMT+8)" +\
+        "\nTime Elapsed: " + elapsed_variable.get() +\
+        "\nStart Time: " + datetime.datetime.now().strftime('%Y-%m-') + '{:02d}'.format(sTed.get()) + ' ' + '{:02d}'.format(sTeh.get()) + ':' + '{:02d}'.format(sTem.get()) + " (GMT+8)" +\
+        "\nEnd Time: " + datetime.datetime.now().strftime('%Y-%m-') + '{:02d}'.format(eTed.get()) + ' ' + '{:02d}'.format(eTeh.get()) + ':' + '{:02d}'.format(eTem.get()) + " (GMT+8)" +\
         "\nService Degradation: " + service_variable.get() +\
         "\nSymptoms: GPM degradation on TEG0 " +\
         "\nAction Taken: " + action_variable.get() +\
