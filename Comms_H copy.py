@@ -1,4 +1,6 @@
+import re
 import datetime
+from posixpath import split
 import tkinter as tk
 from tkinter import messagebox
 from os import read, set_inheritable
@@ -119,7 +121,7 @@ def ch_sys():
 
 HO = []
 sysall = ['TEG0', 'TEG1', 'TEG2', 'TEG3', 'TEG4', 'TEG6', 'Sem', 'B2C', 'QF2', 'LD' ,'MGP SW']
-chva = ['TEG0', 'TEG1', 'TEG2', 'TEG3', 'TEG4', 'TEG6', 'Sempris', 'TNGQuickfire', 'QF2', 'Live Dealer', 'MGP SW']
+chva = ['TEG0', 'TEG1', 'TEG2', 'TEG3', 'TEG4', 'TEG6', 'Sempris', 'TNGQuickfire', 'QF2', 'Live Dealer', 'MGPSW']
 msglabel = StringVar()
 for i in range(0, 6):
     num = IntVar()
@@ -235,44 +237,18 @@ end_Time_entry0=ttk.Combobox(win, values=dds,width=3,textvariable=eTed).place(x=
 end_Time_entry1=ttk.Combobox(win, values=hhs,width=3,textvariable=eTeh).place(x=150, y=220)
 end_Time_entry2=ttk.Combobox(win, values=mms,width=3,textvariable=eTem).place(x=203, y=220)
 eTed.set(datetime.datetime.now().strftime('%d'))
-eTeh.set(datetime.datetime.now().strftime('23'))
-eTem.set(datetime.datetime.now().strftime('00'))
+eTeh.set(datetime.datetime.now().strftime('%H'))
+eTem.set(datetime.datetime.now().strftime('%M'))
+
+dd=datetime.timedelta(days=1,seconds=0)
+hh=datetime.timedelta(hours=1,seconds=0)
+mm=datetime.timedelta(minutes=1,seconds=0)
 
 
-dd=datetime.timedelta(days=1)
-hh=datetime.timedelta(hours=1)
-mm=datetime.timedelta(minutes=1)
+before_split=StringVar()
+elapsed_variable = StringVar()
 
-day_now=datetime.datetime.now()
-# print(day_now)
-
-day_now.strftime('%Y-%m-%d %H:%M')
-# print(day_now)
-test=StringVar()
-test1=StringVar()
-test2=StringVar()
-# https://blog.csdn.net/Gordennizaicunzai/article/details/78926255
-# test=>test2 test1=>test3
-test=datetime.datetime.now().strftime('%Y-%m-') + '{:02d}'.format(eTed.get()) + ' ' + '{:02d}'.format(eTeh.get()) + ':' + '{:02d}'.format(eTem.get())
-test2=datetime.datetime.now().strptime(test, '%Y-%m-%d %H:%M')
-test1=day_now-test2
-test3=datetime.datetime.now().strftime(test1, '%Y-%m-%d %H:%M')
-# test3=datetime.datetime.now().strftime('%d %H:%M',test1)
-# test3='%H'
-
-
-print(str(day_now)+' 現在時間變字串')
-print(test+' 從輸入值變時間字串')
-print(str(test1)+' 現在減輸入值時間')
-print(str(test2)+' 把輸入值字串(test)變時間')
-# print(test3+' 把算完的放回時間')
-print(type(day_now))
-print(type(test))
-print(type(test1))
-print(type(test2))
-
-
-
+# 時間格式參考https://blog.jaycetyle.com/2018/01/python-format-string/
 
 def elapsed():
     global elapsed_lab
@@ -281,92 +257,111 @@ def elapsed():
     hh=datetime.timedelta(hours=1)
     mm=datetime.timedelta(minutes=1)
 
-    day_now=datetime.datetime.now()
-    day_count =IntVar()
-    day_count=0
-    hour_count =IntVar()
-    hour_count=0
-    min_count =IntVar()
-    min_count=0
-    for dt in range(sTed.get(),int(eTed.get()),1):
-        day_now=day_now+dd
-        day_count+=1
-    for ht in range(int(sTeh.get()),int(eTeh.get()),1):
-        day_now=day_now+hh
-        hour_count+=1
-    for mt in range(int(sTem.get()),int(eTem.get()),1):
-        day_now=day_now+mm
-        min_count+=1
-    if eTed.get()-sTed.get() == 0:
-        if eTeh.get()-sTeh.get() == 0:
-            if eTem.get()-sTem.get() == 0:
-                elapsed_variable.set(str(min_count) + ' min ')
-            elif eTem.get()-sTem.get() == 1:
-                elapsed_variable.set(str(min_count) + ' min ')
-            elif eTem.get()-sTem.get() > 1:
-                elapsed_variable.set(str(min_count) + ' mins ')
-        elif eTeh.get()-sTeh.get() == 1:
-            if eTem.get()-sTem.get() == 0:
-                elapsed_variable.set(str(hour_count)+ ' hr ')
-            elif eTem.get()-sTem.get() == 1:
-                elapsed_variable.set(str(hour_count)+ ' hr ' + str(min_count) + ' min ')
-            elif eTem.get()-sTem.get() > 1:
-                elapsed_variable.set(str(hour_count)+ ' hr ' + str(min_count) + ' mins ')
-        elif eTeh.get()-sTeh.get() > 1:
-            if eTem.get()-sTem.get() == 0:
-                elapsed_variable.set(str(hour_count)+ ' hrs ')
-            elif eTem.get()-sTem.get() == 1:
-                elapsed_variable.set(str(hour_count)+ ' hrs ' + str(min_count) + ' min ')
-            elif eTem.get()-sTem.get() > 1:
-                elapsed_variable.set(str(hour_count)+ ' hrs ' + str(min_count) + ' mins ')
-    elif eTed.get()-sTed.get() == 1:
-        if eTeh.get()-sTeh.get() == 0:
-            if eTem.get()-sTem.get() == 0:
-                elapsed_variable.set(str(day_count) + ' day ')
-            elif eTem.get()-sTem.get() == 1:
-                elapsed_variable.set(str(day_count) + ' day ' + str(min_count) + ' min ')
-            elif eTem.get()-sTem.get() > 1:
-                elapsed_variable.set(str(day_count) + ' day ' + str(min_count) + ' mins ')
-        elif eTeh.get()-sTeh.get() == 1:
-            if eTem.get()-sTem.get() == 0:
-                elapsed_variable.set(str(day_count) + ' day ' + str(hour_count)+ ' hr ')
-            elif eTem.get()-sTem.get() == 1:
-                elapsed_variable.set(str(day_count) + ' day ' + str(hour_count)+ ' hr ' + str(min_count) + ' min ')
-            elif eTem.get()-sTem.get() > 1:
-                elapsed_variable.set(str(day_count) + ' day ' + str(hour_count)+ ' hr ' + str(min_count) + ' mins ')
-        elif eTeh.get()-sTeh.get() > 1:
-            if eTem.get()-sTem.get() == 0:
-                elapsed_variable.set(str(day_count) + ' day ' + str(hour_count)+ ' hrs ')
-            elif eTem.get()-sTem.get() == 1:
-                elapsed_variable.set(str(day_count) + ' day ' + str(hour_count)+ ' hrs ' + str(min_count) + ' min ')
-            elif eTem.get()-sTem.get() > 1:
-                elapsed_variable.set(str(day_count) + ' day ' + str(hour_count)+ ' hrs ' + str(min_count) + ' mins ')
-    elif eTed.get()-sTed.get() > 1:
-        if eTeh.get()-sTeh.get() == 0:
-            if eTem.get()-sTem.get() == 0:
-                elapsed_variable.set(str(day_count) + ' days ')
-            elif eTem.get()-sTem.get() == 1:
-                elapsed_variable.set(str(day_count) + ' days ' + str(hour_count) + ' min ')
-            elif eTem.get()-sTem.get() > 1:
-                elapsed_variable.set(str(day_count) + ' days ' + str(hour_count) + ' mins ')
-        elif eTeh.get()-sTeh.get() == 1:
-            if eTem.get()-sTem.get() == 0:
-                elapsed_variable.set(str(day_count) + ' days ' + str(hour_count)+ ' hr ')
-            elif eTem.get()-sTem.get() == 1:
-                elapsed_variable.set(str(day_count) + ' days ' + str(hour_count)+ ' hr ' + str(min_count) + ' min ')
-            elif eTem.get()-sTem.get() > 1:
-                elapsed_variable.set(str(day_count) + ' days ' + str(hour_count)+ ' hr ' + str(min_count) + ' mins ')
-        elif eTeh.get()-sTeh.get() > 1:
-            if eTem.get()-sTem.get() == 0:
-                elapsed_variable.set(str(day_count) + ' days ' + str(hour_count)+ ' hrs ')
-            elif eTem.get()-sTem.get() == 1:
-                elapsed_variable.set(str(day_count) + ' days ' + str(hour_count)+ ' hrs ' + str(min_count) + ' min ')
-            elif eTem.get()-sTem.get() > 1:
-                elapsed_variable.set(str(day_count) + ' days ' + str(hour_count)+ ' hrs ' + str(min_count) + ' mins ')
+    # -------------------------------------------------------------------------------------- 時間運算OK 
+    # Time_format
+    ima=datetime.datetime.now() # 時間陣列格式
+    format_ima = ima.strftime('%Y-%m-%d %H:%M') # 轉換為指定日期格式字串格式
+    # print(format_ima)
+    format_start_ima = ima.strftime('%Y-%m-' + '%d %d:%d'%(int(sTed.get()),int(sTeh.get()),int(sTem.get())))
+    format_end_ima = ima.strftime('%Y-%m-' + '%d %d:%d'%(int(eTed.get()),int(eTeh.get()),int(eTem.get()))) #取得指定時間,字串格式
+    # print(format_end_ima)
+    # print(type(format_end_ima)) # str格式
+
+    start_ima=datetime.datetime.strptime(format_start_ima,'%Y-%m-%d %H:%M')
+    end_ima=datetime.datetime.strptime(format_end_ima,'%Y-%m-%d %H:%M') # 轉換為時間陣列格式
+    # print(end_ima)
+    # print(type(end_ima)) # 時間陣列格式
+
+    # 時間運算
+    final_elapsed_real=(end_ima-start_ima) # 結束減去開始時間
+    before_split.set(final_elapsed_real) # 最終結果
+    elapsed_split_sec_float=str(before_split.get()).rsplit(':',1) # 切割到數第一個':'(秒跟小數點之後) elapsed_split_float[0]-->日時分, elapsed_split_float[1]-->秒 & 微秒
+    elapsed_split_hm=elapsed_split_sec_float[0].split(':',1) # 切割時分, elapsed_final[0]-->日 & 時, elapsed_final[1]-->分
+    # elapsed_variable.set(elapsed_split_hm[0]+ ':' + elapsed_split_hm[1]) # 設定最後值
+    # elapsed_variable.set(elapsed_split_sec_float[0]) # 設定最後值
+    # print(elapsed_split_hm[0]+ ':' + elapsed_split_hm[1])
+    # --------------------------------------------------------------------------------------
+    
+    if 'day' not in str(elapsed_split_hm[0]): # 不到一天
+        if all(c in "01" for c in str(elapsed_split_hm[0])): # 日時的字串中有0 1
+            if int(elapsed_split_hm[0]) < 1: # 日時的字串小於1
+                if int(elapsed_split_hm[1]) <= 1:
+                    elapsed_variable.set(str(elapsed_split_hm[1]) + ' min ') # 0天 0小 0-1分
+                elif int(elapsed_split_hm[1]) > 1:
+                    elapsed_variable.set(str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
+            elif int(elapsed_split_hm[0]) == 1: # 日時的字串等於1
+                if int(elapsed_split_hm[1]) <= 1:
+                    elapsed_variable.set(str(elapsed_split_hm[0]) + ' hr ' + str(elapsed_split_hm[1]) + ' min ') # 0天 0-1小 0-1分
+                elif int(elapsed_split_hm[1]) > 1:
+                    elapsed_variable.set(str(elapsed_split_hm[0]) + ' hr ' + str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
+            elif int(elapsed_split_hm[0]) > 1: # 日時的字串大於1
+                if int(elapsed_split_hm[1]) <= 1:
+                    elapsed_variable.set(str(elapsed_split_hm[0]) + ' hrs ' + str(elapsed_split_hm[1]) + ' min ') # 0天 0-1小 0-1分
+                elif int(elapsed_split_hm[1]) > 1:
+                    elapsed_variable.set(str(elapsed_split_hm[0]) + ' hrs ' + str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
+        elif all(c in "23456789" for c in str(elapsed_split_hm[0])): # 日時的字串中有2-9
+            if int(elapsed_split_hm[0]) < 1: # 日時的字串小於1
+                if int(elapsed_split_hm[1]) <= 1:
+                    elapsed_variable.set(str(elapsed_split_hm[1]) + ' min ') # 0天 0小 0-1分
+                elif int(elapsed_split_hm[1]) > 1:
+                    elapsed_variable.set(str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
+            elif int(elapsed_split_hm[0]) == 1: # 日時的字串等於1
+                if int(elapsed_split_hm[1]) <= 1:
+                    elapsed_variable.set(str(elapsed_split_hm[0]) + ' hr ' + str(elapsed_split_hm[1]) + ' min ') # 0天 0-1小 0-1分
+                elif int(elapsed_split_hm[1]) > 1:
+                    elapsed_variable.set(str(elapsed_split_hm[0]) + ' hr ' + str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
+            elif int(elapsed_split_hm[0]) > 1: # 日時的字串大於1
+                if int(elapsed_split_hm[1]) <= 1:
+                    elapsed_variable.set(str(elapsed_split_hm[0]) + ' hrs ' + str(elapsed_split_hm[1]) + ' min ') # 0天 0-1小 0-1分
+                elif int(elapsed_split_hm[1]) > 1:
+                    elapsed_variable.set(str(elapsed_split_hm[0]) + ' hrs ' + str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
+    elif 'day' in str(elapsed_split_hm[0]): # 大於一天
+        elapsed_split_dh=elapsed_split_hm[0].split(', ',1) # 分割日時字串中大於一天
+        print(elapsed_split_dh[0], '-' ,elapsed_split_dh[1], '-' ,elapsed_split_hm[0], '-' ,elapsed_split_hm[1])
+        if all(c in "01" for c in str(elapsed_split_dh[1])): # 時的字串中有0 1
+            if int(elapsed_split_dh[1]) < 1: # 時的字串小於1
+                if int(elapsed_split_hm[1]) < 1:
+                    elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_hm[1]) + ' min ') # 1天 0-1小 0-1分
+                elif int(elapsed_split_hm[1]) > 1:
+                    elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hr ' + str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
+            elif int(elapsed_split_dh[1]) == 1: # 時的字串等於1
+                if int(elapsed_split_hm[1]) < 1:
+                    elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hr ' + str(elapsed_split_hm[1]) + ' min ') # 1天 0-1小 0-1分
+                elif int(elapsed_split_hm[1]) > 1: 
+                    elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hr ' + str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
+            elif int(elapsed_split_dh[1]) > 1: # 時的字串大於1
+                if int(elapsed_split_hm[1]) <= 1:
+                    elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hrs ' + str(elapsed_split_hm[1]) + ' min ') # 1天 0-1小 0-1分
+                elif int(elapsed_split_hm[1]) > 1:
+                    elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hrs' + str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
+        elif all(c in "23456789" for c in str(elapsed_split_dh[1])): # 時的字串中有2-9
+            if int(elapsed_split_dh[1]) < 1:
+                if int(elapsed_split_hm[1]) < 1: # 時的字小於1
+                    elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_hm[1]) + ' min ') # 1天 0-1小 0-1分
+                elif int(elapsed_split_hm[1]) > 1:
+                    elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hr ' + str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
+            elif int(elapsed_split_dh[1]) == 1: # 時的字串等於1
+                if int(elapsed_split_hm[1]) <= 1:
+                    elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hr ' + str(elapsed_split_hm[1]) + ' min ') # >1小0-1分
+                elif int(elapsed_split_hm[1]) > 1:
+                    elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hr ' + str(elapsed_split_hm[1]) + ' mins ') # >1小>1分
+            elif int(elapsed_split_dh[1]) > 1: # 時的字串大於1
+                if int(elapsed_split_hm[1]) <= 1:
+                    elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hrs ' + str(elapsed_split_hm[1]) + ' min ') # >1小0-1分
+                elif int(elapsed_split_hm[1]) > 1:
+                    elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hrs ' + str(elapsed_split_hm[1]) + ' mins ') # >1小>1分
+
+
+    # if all(str(elapsed_split_hm[0]) in "01:" for elapsed_split_hm[0] in str(elapsed_split_hm[0])):
+    #     print('字串沒有 0: 1:')
+    # elif all(str(elapsed_split_hm[0]) in "2" for elapsed_split_hm[0] in str(elapsed_split_hm[0])):
+    #     print('字串有 0: 1:')
+
+
     win.after(200, elapsed)
 
 # Time Elapsed 缺計算時間
-elapsed_variable = StringVar()
+
 elapsed_lab = Label(win, text='%s' % elapsed_variable.get())
 elapsed_lab.place(x=105, y=179)
 win.after(100,elapsed)
