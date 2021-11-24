@@ -91,6 +91,11 @@ ima=datetime.datetime.now()
 start_ima=datetime.datetime(ima.year, ima.month,1) # 每月第一天
 end_ima=datetime.datetime(ima.year, ima.month, calendar.monthrange(ima.year, ima.month)[1]) # 每月最後一天
 # print(start_ima.day,end_ima.day)
+dd = datetime.timedelta(days=1, seconds=0)
+hh = datetime.timedelta(hours=1, seconds=0)
+mm = datetime.timedelta(minutes=1, seconds=0)
+next_ima = end_ima+dd  # 下個月第一天
+next_day = ima+(dd*7)
 
 def copy_value():
     win.clipboard_append(msglabel.get())
@@ -198,10 +203,21 @@ def validate(P):
 vcmd = (win.register(validate), '%P')
 
 
-dds=[] # 01-31 days
-for ds in range(ima.day,int(end_ima.day)+1,1):
-    dds.append(ds)
-    ds+=1
+dds = []  # 01-31 days
+if ima.month == next_day.month:  # 今天月等於明天月
+    print('等於')
+    for ds in range(ima.day, int(end_ima.day)+1, 1):
+        dds.append(ds)
+        ds += 1
+elif ima.month != next_day.month:  # 今天月不等於明天月
+    print('不等於')
+    for ds in range(ima.day, int(end_ima.day)+1, 1):
+        dds.append(ds)
+        ds += 1
+    for ds in range(next_ima.day, int(next_day.day)+1, 1):
+        dn = ds
+        dds.append(dn)
+        ds += 1
 
 mms=[] # 00-59 mins
 for ms in range(0,60,1):
@@ -246,12 +262,8 @@ eTed.set(ima.day)
 eTeh.set(ima.hour)
 eTem.set(ima.minute)
 
-dd=datetime.timedelta(days=1,seconds=0)
-hh=datetime.timedelta(hours=1,seconds=0)
-mm=datetime.timedelta(minutes=1,seconds=0)
 
-
-before_split=StringVar()
+before_split = StringVar()
 elapsed_variable = StringVar()
 
 # 時間格式參考https://blog.jaycetyle.com/2018/01/python-format-string/
