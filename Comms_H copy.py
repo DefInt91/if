@@ -444,7 +444,7 @@ crisis_entry = Entry(win, font=size8_B, textvariable=crisis_variable).place(x=10
 crisis_variable.set('Null or Fill in')
 
 # ITOC member
-ITOC_lab = Label(win, font=size10_B, text='Escalated by:',fg='red').place(x=0, y=380)
+ITOC_lab = Label(win, font=size8_B, text='Escalated by:',fg='red').place(x=0, y=380)
 ITOC_variable = StringVar()
 ITOC_manager = ttk.Combobox(win, textvariable=ITOC_variable, values=(
     'Acise Lee',
