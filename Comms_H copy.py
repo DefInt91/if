@@ -95,7 +95,7 @@ dd = datetime.timedelta(days=1, seconds=0)
 hh = datetime.timedelta(hours=1, seconds=0)
 mm = datetime.timedelta(minutes=1, seconds=0)
 next_ima = end_ima+dd  # 下個月第一天
-next_day = ima+(dd*7)
+next_day = ima+dd
 
 def copy_value():
     win.clipboard_append(msglabel.get())
