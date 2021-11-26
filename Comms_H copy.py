@@ -88,6 +88,8 @@ win.after(100, uptime)
 
 # https://zhuanlan.zhihu.com/p/95919866
 ima=datetime.datetime.now()
+# Time_format
+format_ima = ima.strftime('%Y-%m-%d %H:%M') # 轉換為指定日期格式字串格式
 start_ima=datetime.datetime(ima.year, ima.month,1) # 每月第一天
 end_ima=datetime.datetime(ima.year, ima.month, calendar.monthrange(ima.year, ima.month)[1]) # 每月最後一天
 # print(start_ima.day,end_ima.day)
@@ -95,7 +97,8 @@ dd = datetime.timedelta(days=1, seconds=0)
 hh = datetime.timedelta(hours=1, seconds=0)
 mm = datetime.timedelta(minutes=1, seconds=0)
 next_ima = end_ima+dd  # 下個月第一天
-next_day = ima+dd
+tomorrow = ima+dd*8
+yesterday = ima-dd
 
 def copy_value():
     win.clipboard_append(msglabel.get())
@@ -204,17 +207,15 @@ vcmd = (win.register(validate), '%P')
 
 
 dds = []  # 01-31 days
-if ima.month == next_day.month:  # 今天月等於明天月
-    print('等於')
-    for ds in range(ima.day, int(end_ima.day)+1, 1):
+if ima.month == tomorrow.month:  # 今天月等於明天月
+    for ds in range(yesterday.day, int(end_ima.day)+1, 1):
         dds.append(ds)
         ds += 1
-elif ima.month != next_day.month:  # 今天月不等於明天月
-    print('不等於')
-    for ds in range(ima.day, int(end_ima.day)+1, 1):
+elif ima.month != tomorrow.month:  # 今天月不等於明天月
+    for ds in range(yesterday.day, int(end_ima.day)+1, 1):
         dds.append(ds)
         ds += 1
-    for ds in range(next_ima.day, int(next_day.day)+1, 1):
+    for ds in range(next_ima.day, int(tomorrow.day)+3, 1):
         dn = ds
         dds.append(dn)
         ds += 1
@@ -271,13 +272,10 @@ elapsed_variable = StringVar()
 def elapsed():
     global elapsed_lab
     elapsed_lab.config(text= '%s' % elapsed_variable.get())
-    dd=datetime.timedelta(days=1)
-    hh=datetime.timedelta(hours=1)
-    mm=datetime.timedelta(minutes=1)
+
 
     # -------------------------------------------------------------------------------------- 時間運算OK 
-    # Time_format
-    format_ima = ima.strftime('%Y-%m-%d %H:%M') # 轉換為指定日期格式字串格式
+    
     # print(format_ima)
     format_start_ima = ima.strftime('%Y-%m-' + '%d %d:%d'%(int(sTed.get()),int(sTeh.get()),int(sTem.get())))
     format_end_ima = ima.strftime('%Y-%m-' + '%d %d:%d'%(int(eTed.get()),int(eTeh.get()),int(eTem.get()))) #取得指定時間,字串格式
