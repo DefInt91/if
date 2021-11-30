@@ -83,7 +83,7 @@ def uptime():
 
 
 TimeLabel = Label(text="%s" % (datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),), fg='red', font=text_B)
-TimeLabel.place(x=200, y=20)
+TimeLabel.place(x=360, y=20)
 win.after(100, uptime)
 
 # https://zhuanlan.zhihu.com/p/95919866
@@ -97,7 +97,7 @@ dd = datetime.timedelta(days=1, seconds=0)
 hh = datetime.timedelta(hours=1, seconds=0)
 mm = datetime.timedelta(minutes=1, seconds=0)
 next_ima = end_ima+dd  # 下個月第一天
-tomorrow = ima+dd*8
+tomorrow = ima+dd
 yesterday = ima-dd
 
 def copy_value():
@@ -112,7 +112,7 @@ srabtn0 = Radiobutton(win, text='New', variable=status_variable, value='New').pl
 srabtn1 = Radiobutton(win, text='Resolved', variable=status_variable, value='Resolved').place(x=100, y=0)
 srabtn2 = Radiobutton(win, text='On Hold', variable=status_variable, value='On Hold').place(x=180, y=0)
 srabtn3 = Radiobutton(win, text='Re-occurring', variable=status_variable, value='Re-occurring').place(x=260, y=0)
-srabtn4 = Radiobutton(win, text='New/Resolved', variable=status_variable, value='New / Resolved').place(x=360, y=0)
+srabtn4 = Radiobutton(win, text='New/Resolved', variable=status_variable, value='New/Resolved').place(x=360, y=0)
 
 
 # Severity
@@ -121,6 +121,40 @@ sev_variable = StringVar()
 sev_variable.set('A')
 sev_A = Radiobutton(win, text='A', variable=sev_variable, value='A').place(x=50, y=20)
 sev_B = Radiobutton(win, text='B', variable=sev_variable, value='B').place(x=90, y=20)
+
+# 只能輸入數字
+def num1_callback(event): # note that you must include the event as an arg, even if you don't use it.
+    sev_num1_entry.delete(0, "end")
+    return None
+def num2_callback(event): # note that you must include the event as an arg, even if you don't use it.
+    sev_num2_entry.delete(0, "end")
+    return None
+def validate(P):
+    # print(P)
+    if str.isdigit(P) or P == '':
+        return True
+    else:
+        return False
+
+vcmd = (win.register(validate), '%P')
+sev_num1=StringVar()
+sev_num2=StringVar()
+
+# sev_num1=0
+# sev_num2=0.0
+
+# scal=0
+sev_num1_entry = Entry(win, font=size8_B, textvariable=sev_num1, width=4, validate='key', validatecommand=vcmd)
+sev_num2_entry = Entry(win, font=size8_B, textvariable=sev_num2, width=4, validate='key', validatecommand=vcmd)
+sev_num1_entry.insert(0,'12')
+sev_num2_entry.insert(0,'13')
+sev_num1_entry.bind("<Button-1>", num1_callback)
+sev_num2_entry.bind("<Button-1>", num2_callback)
+
+sev_num1_entry.place(x=140, y=22)
+sev_num2_entry.place(x=180, y=22)
+
+# sev_resul=Label(win, textvariable=scal,text='%s' % elapsed_variable.get()).place(x=300,y=100) # 計算後顯示Sev A/B
 
 # Systems
 # 用for迴圈的寫法 https://www.dotblogs.com.tw/YiruAtStudio/2021/02/22/193206; https://selflearningsuccess.com/python-for-loop/
@@ -238,9 +272,9 @@ sTeh = IntVar()
 sTem = IntVar()
 start_lab = Label(win, font=size12, text=':').place(x=190, y=195)
 GMT_lab = Label(win, font=size10, text='GMT+8').place(x=243, y=200)
-start_Time_entry0=ttk.Combobox(win, values=dds,width=3,textvariable=sTed).place(x=105, y=200)
-start_Time_entry1=ttk.Combobox(win, values=hhs,width=3,textvariable=sTeh).place(x=150, y=200)
-start_Time_entry2=ttk.Combobox(win, values=mms,width=3,textvariable=sTem).place(x=203, y=200)
+start_Time_entry0=ttk.Combobox(win, values=dds,width=3,textvariable=sTed, state='readonly').place(x=105, y=200)
+start_Time_entry1=ttk.Combobox(win, values=hhs,width=3,textvariable=sTeh, state='readonly').place(x=150, y=200)
+start_Time_entry2=ttk.Combobox(win, values=mms,width=3,textvariable=sTem, state='readonly').place(x=203, y=200)
 
 sTed.set(ima.day)
 sTeh.set(ima.hour)
@@ -256,9 +290,9 @@ GMT_lab = Label(win, font=size10, text='GMT+8').place(x=243, y=220)
 # end_Time_entry0 = Entry(win, font=size10, textvariable=eTed, width=3, validate='key', validatecommand=vcmd).place(x=105, y=220)
 # end_Time_entry1 = Entry(win, font=size10, textvariable=eTeh, width=3, validate='key', validatecommand=vcmd).place(x=135, y=220)
 # end_Time_entry2 = Entry(win, font=size10, textvariable=eTem, width=3, validate='key', validatecommand=vcmd).place(x=175, y=220)
-end_Time_entry0=ttk.Combobox(win, values=dds,width=3,textvariable=eTed).place(x=105, y=220)
-end_Time_entry1=ttk.Combobox(win, values=hhs,width=3,textvariable=eTeh).place(x=150, y=220)
-end_Time_entry2=ttk.Combobox(win, values=mms,width=3,textvariable=eTem).place(x=203, y=220)
+end_Time_entry0=ttk.Combobox(win, values=dds,width=3,textvariable=eTed, state='readonly').place(x=105, y=220)
+end_Time_entry1=ttk.Combobox(win, values=hhs,width=3,textvariable=eTeh, state='readonly').place(x=150, y=220)
+end_Time_entry2=ttk.Combobox(win, values=mms,width=3,textvariable=eTem, state='readonly').place(x=203, y=220)
 eTed.set(ima.day)
 eTeh.set(ima.hour)
 eTem.set(ima.minute)
@@ -284,7 +318,7 @@ def elapsed():
 
     start_ima=datetime.datetime.strptime(format_start_ima,'%Y-%m-%d %H:%M')
     end_ima=datetime.datetime.strptime(format_end_ima,'%Y-%m-%d %H:%M') # 轉換為時間陣列格式
-    # print(str(start_ima)+'      '+str(end_ima))
+    # print(str(start_ima)+'      '+str(end_ima+dd*2) + '   =   ' + str((end_ima+dd*2)-start_ima))
     # print(type(end_ima)) # 時間陣列格式
 
     # 時間運算
@@ -299,83 +333,91 @@ def elapsed():
     
     if '-' in str(elapsed_split_hm[0]):
         elapsed_variable.set('Time cannot be negative!')
-    else:
-        if 'day' not in str(elapsed_split_hm[0]): # 不到一天
-            if all(c in "01" for c in str(elapsed_split_hm[0])): # 日時的字串中有0 1
-                if int(elapsed_split_hm[0]) < 1: # 日時的字串小於1
-                    if int(elapsed_split_hm[1]) <= 1:
-                        elapsed_variable.set(str(elapsed_split_hm[1]) + ' min ') # 0天 0小 0-1分
-                    elif int(elapsed_split_hm[1]) > 1:
-                        elapsed_variable.set(str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
-                elif int(elapsed_split_hm[0]) == 1: # 日時的字串等於1
-                    if int(elapsed_split_hm[1]) <= 1:
-                        elapsed_variable.set(str(elapsed_split_hm[0]) + ' hr ' + str(elapsed_split_hm[1]) + ' min ') # 0天 0-1小 0-1分
-                    elif int(elapsed_split_hm[1]) > 1:
-                        elapsed_variable.set(str(elapsed_split_hm[0]) + ' hr ' + str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
-                elif int(elapsed_split_hm[0]) > 1: # 日時的字串大於1
-                    if int(elapsed_split_hm[1]) <= 1:
-                        elapsed_variable.set(str(elapsed_split_hm[0]) + ' hrs ' + str(elapsed_split_hm[1]) + ' min ') # 0天 0-1小 0-1分
-                    elif int(elapsed_split_hm[1]) > 1:
-                        elapsed_variable.set(str(elapsed_split_hm[0]) + ' hrs ' + str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
-            elif all(c in "23456789" for c in str(elapsed_split_hm[0])): # 日時的字串中有2-9
-                if int(elapsed_split_hm[0]) < 1: # 日時的字串小於1
-                    if int(elapsed_split_hm[1]) <= 1:
-                        elapsed_variable.set(str(elapsed_split_hm[1]) + ' min ') # 0天 0小 0-1分
-                    elif int(elapsed_split_hm[1]) > 1:
-                        elapsed_variable.set(str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
-                elif int(elapsed_split_hm[0]) == 1: # 日時的字串等於1
-                    if int(elapsed_split_hm[1]) <= 1:
-                        elapsed_variable.set(str(elapsed_split_hm[0]) + ' hr ' + str(elapsed_split_hm[1]) + ' min ') # 0天 0-1小 0-1分
-                    elif int(elapsed_split_hm[1]) > 1:
-                        elapsed_variable.set(str(elapsed_split_hm[0]) + ' hr ' + str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
-                elif int(elapsed_split_hm[0]) > 1: # 日時的字串大於1
-                    if int(elapsed_split_hm[1]) <= 1:
-                        elapsed_variable.set(str(elapsed_split_hm[0]) + ' hrs ' + str(elapsed_split_hm[1]) + ' min ') # 0天 0-1小 0-1分
-                    elif int(elapsed_split_hm[1]) > 1:
-                        elapsed_variable.set(str(elapsed_split_hm[0]) + ' hrs ' + str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
-        elif 'day' in str(elapsed_split_hm[0]): # 大於一天
-            elapsed_split_dh=elapsed_split_hm[0].split(', ',1) # 分割日時字串中大於一天
-            print(elapsed_split_dh[0], '-' ,elapsed_split_dh[1], '-' ,elapsed_split_hm[0], '-' ,elapsed_split_hm[1])
-            if all(c in "01" for c in str(elapsed_split_dh[1])): # 時的字串中有0 1
-                if int(elapsed_split_dh[1]) < 1: # 時的字串小於1
-                    if int(elapsed_split_hm[1]) < 1:
-                        elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_hm[1]) + ' min ') # 1天 0-1小 0-1分
-                    elif int(elapsed_split_hm[1]) > 1:
-                        elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hr ' + str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
-                elif int(elapsed_split_dh[1]) == 1: # 時的字串等於1
-                    if int(elapsed_split_hm[1]) < 1:
-                        elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hr ' + str(elapsed_split_hm[1]) + ' min ') # 1天 0-1小 0-1分
-                    elif int(elapsed_split_hm[1]) > 1: 
-                        elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hr ' + str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
-                elif int(elapsed_split_dh[1]) > 1: # 時的字串大於1
-                    if int(elapsed_split_hm[1]) <= 1:
-                        elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hrs ' + str(elapsed_split_hm[1]) + ' min ') # 1天 0-1小 0-1分
-                    elif int(elapsed_split_hm[1]) > 1:
-                        elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hrs' + str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
-            elif all(c in "23456789" for c in str(elapsed_split_dh[1])): # 時的字串中有2-9
-                if int(elapsed_split_dh[1]) < 1:
-                    if int(elapsed_split_hm[1]) < 1: # 時的字小於1
-                        elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_hm[1]) + ' min ') # 1天 0-1小 0-1分
-                    elif int(elapsed_split_hm[1]) > 1:
-                        elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hr ' + str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
-                elif int(elapsed_split_dh[1]) == 1: # 時的字串等於1
-                    if int(elapsed_split_hm[1]) <= 1:
-                        elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hr ' + str(elapsed_split_hm[1]) + ' min ') # >1小0-1分
-                    elif int(elapsed_split_hm[1]) > 1:
-                        elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hr ' + str(elapsed_split_hm[1]) + ' mins ') # >1小>1分
-                elif int(elapsed_split_dh[1]) > 1: # 時的字串大於1
-                    if int(elapsed_split_hm[1]) <= 1:
-                        elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hrs ' + str(elapsed_split_hm[1]) + ' min ') # >1小0-1分
-                    elif int(elapsed_split_hm[1]) > 1:
-                        elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hrs ' + str(elapsed_split_hm[1]) + ' mins ') # >1小>1分
-
-
-    # if all(str(elapsed_split_hm[0]) in "01:" for elapsed_split_hm[0] in str(elapsed_split_hm[0])):
-    #     print('字串沒有 0: 1:')
-    # elif all(str(elapsed_split_hm[0]) in "2" for elapsed_split_hm[0] in str(elapsed_split_hm[0])):
-    #     print('字串有 0: 1:')
-
-
+    elif 'day' not in str(elapsed_split_hm[0]): # 不到一天
+        if all(c in "01" for c in str(elapsed_split_hm[0])): # 日時的字串中有0 1
+            if int(elapsed_split_hm[0]) == 0: # 日時的字串小於1
+                if int(elapsed_split_hm[1]) <= 1:
+                    elapsed_variable.set(str(elapsed_split_hm[1]) + ' min ') # 0天 0小 0-1分
+                elif int(elapsed_split_hm[1]) > 1:
+                    elapsed_variable.set(str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
+            elif int(elapsed_split_hm[0]) == 1: # 日時的字串等於1
+                if int(elapsed_split_hm[1]) == 0:
+                    elapsed_variable.set(str(elapsed_split_hm[0]) + ' hr ') # 0天 0-1小 0-1分
+                elif int(elapsed_split_hm[1]) == 1:
+                    elapsed_variable.set(str(elapsed_split_hm[0]) + ' hr ' + str(elapsed_split_hm[1]) + ' min ') # 0天 0-1小 0-1分
+                elif int(elapsed_split_hm[1]) > 1:
+                    elapsed_variable.set(str(elapsed_split_hm[0]) + ' hr ' + str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
+            elif int(elapsed_split_hm[0]) == 10 or 11:
+                if int(elapsed_split_hm[1]) == 0:
+                    elapsed_variable.set(str(elapsed_split_hm[0]) + ' hrs ' ) # 0天 0小 0-1分
+                elif int(elapsed_split_hm[1]) == 1:
+                    elapsed_variable.set(str(elapsed_split_hm[0]) + ' hrs ' + str(elapsed_split_hm[1]) + ' min ') # 0天 0小 0-1分
+                elif int(elapsed_split_hm[1]) > 1:
+                    elapsed_variable.set(str(elapsed_split_hm[0]) + ' hrs ' + str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
+        elif int(elapsed_split_hm[0]) <= 23:
+            if int(elapsed_split_hm[1]) == 0:
+                elapsed_variable.set(str(elapsed_split_hm[0]) + ' hrs ' ) # 0天 0小 0-1分
+            elif int(elapsed_split_hm[1]) == 1:
+                elapsed_variable.set(str(elapsed_split_hm[0]) + ' hrs ' + str(elapsed_split_hm[1]) + ' min ') # 0天 0小 0-1分
+            elif int(elapsed_split_hm[1]) > 1:
+                elapsed_variable.set(str(elapsed_split_hm[0]) + ' hrs ' + str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
+        # elif all(c in "23456789" for c in str(elapsed_split_hm[0])): # 日時的字串中有2-9
+        #     print('0天 + hrs')
+        #     if int(elapsed_split_hm[0]) >= 2: # 日時的字串等於1
+        #         print('0天 + 2 hrs')
+        #         if int(elapsed_split_hm[1]) == 0:
+        #             print('0天 + 2 hrs + 0 min')
+        #             elapsed_variable.set(str(elapsed_split_hm[0]) + ' hrs ' ) # 0天 0-1小 0-1分
+        #         if int(elapsed_split_hm[1]) == 1:
+        #             print('0天 + 2 hrs + 1 min')
+        #             elapsed_variable.set(str(elapsed_split_hm[0]) + ' hrs ' + str(elapsed_split_hm[1]) + ' min ') # 0天 0-1小 0-1分
+        #         elif int(elapsed_split_hm[1]) > 1:
+        #             print('0天 + 2 hrs + mins')
+        #             elapsed_variable.set(str(elapsed_split_hm[0]) + ' hrs ' + str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
+    elif 'day' in str(elapsed_split_hm[0]): # 大於一天
+        elapsed_split_dh=elapsed_split_hm[0].split(', ',1) # 分割日時字串中大於一天
+        if all(c in "01" for c in str(elapsed_split_dh[1])): # 時的字串中有0 1
+            if int(elapsed_split_dh[1]) == 0: # 時的字串小於1
+                if int(elapsed_split_hm[1]) < 1: # 分的字串小於1
+                    elapsed_variable.set(str(elapsed_split_dh[0])) # 1天 0-1小 0-1分
+                elif int(elapsed_split_hm[1]) == 1: # 分的字串等於1
+                    elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_hm[1]) + ' min ') # 0天 0-1小 > 1分
+                elif int(elapsed_split_hm[1]) > 1: # 分的字串大於1
+                    elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
+            elif int(elapsed_split_dh[1]) == 1: # 時的字串等於1
+                if int(elapsed_split_hm[1]) < 1:
+                    elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hr ' ) # 1天 0-1小 0-1分
+                elif int(elapsed_split_hm[1]) == 1: 
+                    elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hr ' + str(elapsed_split_hm[1]) + ' min ') # 0天 0-1小 > 1分
+                elif int(elapsed_split_hm[1]) > 1: 
+                    elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hr ' + str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
+            elif str(elapsed_split_dh[1]) == 10 or 11:
+                if int(elapsed_split_hm[1]) == 0:
+                    elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hrs ' ) # 0天 0小 0-1分
+                elif int(elapsed_split_hm[1]) == 1:
+                    elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hrs ' + str(elapsed_split_hm[1]) + ' min ') # 0天 0小 0-1分
+                elif int(elapsed_split_hm[1]) > 1:
+                    elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hrs ' + str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
+        # elif all(c in "23456789" for c in str(elapsed_split_dh[1])): # 時的字串中有2-9
+        #     print('1天 + hrs')
+        #     if int(elapsed_split_dh[1]) > 1: # 時的字串大於1
+        #         print('1天 + 2 hrs')
+        #         if int(elapsed_split_hm[1]) == 0:
+        #             print('1天 + hrs + 0 min')
+        #             elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hrs ') # >1小0-1分
+        #         elif int(elapsed_split_hm[1]) == 1:
+        #             print('1天 + hrs + 1 min')
+        #             elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hrs ' + str(elapsed_split_hm[1]) + ' min ') # >1小0-1分
+        #         elif int(elapsed_split_hm[1]) > 1:
+        #             print('1天 + hrs + mins')
+        #             elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hrs ' + str(elapsed_split_hm[1]) + ' mins ') # >1小>1分
+        elif int(elapsed_split_dh[1]) <= 23:
+                if int(elapsed_split_hm[1]) == 0:
+                    elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hrs ' ) # 0天 0小 0-1分
+                elif int(elapsed_split_hm[1]) == 1:
+                    elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hrs ' + str(elapsed_split_hm[1]) + ' min ') # 0天 0小 0-1分
+                elif int(elapsed_split_hm[1]) > 1:
+                    elapsed_variable.set(str(elapsed_split_dh[0]) + ' ' + str(elapsed_split_dh[1]) + ' hrs ' + str(elapsed_split_hm[1]) + ' mins ') # 0天 0-1小 > 1分
     win.after(200, elapsed)
 
 # Time Elapsed 缺計算時間
@@ -386,14 +428,20 @@ win.after(100,elapsed)
 
 
 # Service Degradation
+def some_callback(event): # note that you must include the event as an arg, even if you don't use it.
+    service_entry.delete(0, "end")
+    return None
+
+
 def to_uppercase(*args):
     service_variable.set(service_variable.get().upper())
 service_variable = StringVar()
 service_lab = Label(win, text=' %').place(x=150, y=241)
-service_entry = Entry(win, font=size8_B, textvariable=service_variable, width=4).place(x=125, y=242)
+service_entry = Entry(win, font=size8_B, textvariable=service_variable, width=4)
 service_variable.set('N/A')
 service_variable.trace_add('write', to_uppercase)
-
+service_entry.bind("<Button-1>", some_callback)
+service_entry.place(x=125, y=242)
 # Symptoms
 symptoms_variable = StringVar()
 symptoms_entry = Entry(win, font=size8_B, width=64).place(x=105, y=260)
@@ -435,11 +483,18 @@ comms_variable.set('Pick one')
 
 
 # Crisis_Manager
+def some_callback(event): # note that you must include the event as an arg, even if you don't use it.
+    crisis_entry.delete(0, "end")
+    return None
+
+
 crisis_lab = Label(win, font=size8_B,text='Crisis Manager: ').place(x=0, y=360)
 crisis_variable = StringVar()
-# crisis_lab2=Label(win,font=size8_B,textvariable=comms_variable).place(x=245,y=360)
-crisis_entry = Entry(win, font=size8_B, textvariable=crisis_variable).place(x=105, y=361)
+
+crisis_entry = Entry(win, font=size8_B, textvariable=crisis_variable)
 crisis_variable.set('Null or Fill in')
+crisis_entry.bind("<Button-1>", some_callback)
+crisis_entry.place(x=105, y=361)
 
 # ITOC member
 ITOC_lab = Label(win, font=size8_B, text='Escalated by:',fg='red').place(x=0, y=380)
@@ -477,9 +532,9 @@ ref_variable.trace_add('write', to_uppercase)
 # Teams URL
 teams_variable = StringVar()
 teams_lab = Label(win, font=size8_B, text='Teams Chat: ').place(x=0, y=440)
-teams_entry = Entry(win, textvariable=teams_variable).place(x=105, y=440)
+teams_entry = Entry(win, textvariable=teams_variable)
 teams_variable.set('N/A')
-
+teams_entry.place(x=105, y=440)
 
 # TEXT物件
 # mes=tk.Text(win, width=50, height=3)
@@ -514,6 +569,7 @@ def copy_comms():
         "Status: " + status_variable.get() +\
         "\nSeverity: " + sev_variable.get() +\
         "\nName: " + msglabel.get() +\
+        "\nAffecting System: MGP SW" +\
         "\nTier: " + tier_variable.get() +\
         "\nOperator: Power_Asia, FCM88, TOP_USD2, Asia888, Poseidon, TH1GAMES, TOP_USD(GAMA), MaxPro, Metaltex" +\
         "\nTime Elapsed: " + elapsed_variable.get() +\
