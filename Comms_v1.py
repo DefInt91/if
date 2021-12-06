@@ -25,7 +25,7 @@ win.config(background="#f1f1f1")  # 顏名or 16進制 #000000
 
 win.attributes("-alpha", 1)  # 透明度1~0, 1=不透明
 
-win.attributes("-topmost", 1)  # 置頂
+win.attributes("-topmost", 0)  # 置頂
 # =====================================================================
 # Function
 # en=tk.Entry() #輸入窗的物件
@@ -100,6 +100,46 @@ next_ima = end_ima+dd  # 下個月第一天
 tomorrow = ima+dd
 yesterday = ima-dd
 
+# Service Degradation 自動計算掉的百分比
+def sev_calc():
+    global sev_result
+    global Sev_cal
+    Sev_cal.config( text='%s' % service_variable.get())
+    
+    if sev_num1_entry.get() == '':
+        sev_num1_entry.insert(0,'0')
+        service_variable.set('0%')
+    if sev_num2_entry.get() == '':
+        sev_num2_entry.insert(0,'0')
+
+    if float(sev_num1_entry.get()) > float(sev_num2_entry.get()):
+        sev_result=(float(sev_num1_entry.get()) - float(sev_num2_entry.get()))/float(sev_num1_entry.get())*100
+        if 0 < sev_result < 25:
+            sev_variable.set('None')
+            service_variable.set('N/A')
+        elif 25 <= sev_result < 50: 
+            sev_variable.set('B')
+            service_variable.set('{:2.0f}'.format(sev_result))
+        elif sev_result >= 50: 
+            sev_variable.set('A')
+            service_variable.set('{:2.0f}'.format(sev_result))
+    elif float(sev_num1_entry.get()) < float(sev_num2_entry.get()):
+        sev_result=(float(sev_num2_entry.get()) - float(sev_num1_entry.get()))/float(sev_num2_entry.get())*100
+        if 0 < sev_result < 25:
+            sev_variable.set('None')
+            service_variable.set('N/A')
+        elif 25 <= sev_result < 50: 
+            sev_variable.set('B')
+            service_variable.set('{:2.0f}'.format(sev_result))
+        elif sev_result >= 50: 
+            sev_variable.set('A')
+            service_variable.set('{:2.0f}'.format(sev_result))
+    elif float(sev_num1_entry.get()) == float(sev_num2_entry.get()):
+        sev_variable.set('None')
+        service_variable.set('N/A')
+
+    win.after(200, sev_calc)
+
 def copy_value():
     win.clipboard_append(msglabel.get())
 
@@ -135,26 +175,18 @@ def validate(P):
         return True
     else:
         return False
-
 vcmd = (win.register(validate), '%P')
-sev_num1=StringVar()
-sev_num2=StringVar()
-
-# sev_num1=0
-# sev_num2=0.0
-
-# scal=0
-sev_num1_entry = Entry(win, font=size8_B, textvariable=sev_num1, width=4, validate='key', validatecommand=vcmd)
-sev_num2_entry = Entry(win, font=size8_B, textvariable=sev_num2, width=4, validate='key', validatecommand=vcmd)
-sev_num1_entry.insert(0,'12')
-sev_num2_entry.insert(0,'13')
-sev_num1_entry.bind("<Button-1>", num1_callback)
-sev_num2_entry.bind("<Button-1>", num2_callback)
-
+# Service Degradation的兩個數值
+sev_num1_entry = Entry(win, font=size8_B, width=4, validate='key')
+sev_num2_entry = Entry(win, font=size8_B, width=4, validate='key')
 sev_num1_entry.place(x=140, y=22)
 sev_num2_entry.place(x=180, y=22)
 
-# sev_resul=Label(win, textvariable=scal,text='%s' % elapsed_variable.get()).place(x=300,y=100) # 計算後顯示Sev A/B
+# 即時顯示計算掉多少%
+sev_result = StringVar()
+Sev_cal = Label(textvariable ='%s' % sev_result.get(), fg='red', font=text_B)
+Sev_cal.place(x=220,y=20)
+win.after(100, sev_calc)
 
 # Systems
 # 用for迴圈的寫法 https://www.dotblogs.com.tw/YiruAtStudio/2021/02/22/193206; https://selflearningsuccess.com/python-for-loop/
@@ -166,7 +198,7 @@ def ch_sys():
             showmsg = showmsg+chva[i]+", "
     msglabel.set(showmsg)
 
-
+# 乾爹們
 HO = []
 sysall = ['TEG0', 'TEG1', 'TEG2', 'TEG3', 'TEG4', 'TEG6', 'Sem', 'B2C', 'QF2', 'LD' ,'MGP SW']
 chva = ['TEG0', 'TEG1', 'TEG2', 'TEG3', 'TEG4', 'TEG6', 'Sempris', 'TNGQuickfire', 'QF2', 'Live Dealer', 'MGPSW']
@@ -565,29 +597,54 @@ def copy_comms():
 
 
 # https://pyformat.info/ 數字補零格式化
-    all_sen = \
-        "Status: " + status_variable.get() +\
-        "\nSeverity: " + sev_variable.get() +\
-        "\nName: " + msglabel.get() +\
-        "\nAffecting System: MGP SW" +\
-        "\nTier: " + tier_variable.get() +\
-        "\nOperator: Power_Asia, FCM88, TOP_USD2, Asia888, Poseidon, TH1GAMES, TOP_USD(GAMA), MaxPro, Metaltex" +\
-        "\nTime Elapsed: " + elapsed_variable.get() +\
-        "\nStart Time: " + datetime.datetime.now().strftime('%Y-%m-') + '{:02d}'.format(sTed.get()) + ' ' + '{:02d}'.format(sTeh.get()) + ':' + '{:02d}'.format(sTem.get()) + " (GMT+8)" +\
-        "\nEnd Time: " + datetime.datetime.now().strftime('%Y-%m-') + '{:02d}'.format(eTed.get()) + ' ' + '{:02d}'.format(eTeh.get()) + ':' + '{:02d}'.format(eTem.get()) + " (GMT+8)" +\
-        "\nService Degradation: " + service_variable.get() +\
-        "\nSymptoms: GPM degradation on TEG0 " +\
-        "\nAction Taken: " + action_variable.get() +\
-        "\nRoot Cause: " + cause_variable.get() +\
-        "\nComms Manager: " + comms_variable.get() +\
-        "\nCrisis Manager: " + crisis_variable.get() +\
-        "\nEscalated by: " + ITOC_variable.get() + " (+886 226 560 700 ext 207)" +\
-        "\n" +\
-        "\nClik ID: " + clik_variable.get() +\
-        "\nCustomer Ref#: " + ref_variable.get() +\
-        "\n" +\
-        "\nJoin Microsoft Teams Chat: " + teams_variable.get()
-    win.clipboard_append(all_sen) # This is the process of copying to the clipboard
+    if 'Resolved' in str(status_variable.get()):
+        all_sen = \
+            "Status: " + status_variable.get() +\
+            "\nSeverity: " + sev_variable.get() +\
+            "\nName: " + msglabel.get() +\
+            "\nAffecting System: "+ msglabel.get() +\
+            "\nTier: " + tier_variable.get() +\
+            "\nOperator: Power_Asia, FCM88, TOP_USD2, Asia888, Poseidon, TH1GAMES, TOP_USD(GAMA), MaxPro, Metaltex" +\
+            "\nTime Elapsed: " + elapsed_variable.get() +\
+            "\nStart Time: " + datetime.datetime.now().strftime('%Y-%m-') + '{:02d}'.format(sTed.get()) + ' ' + '{:02d}'.format(sTeh.get()) + ':' + '{:02d}'.format(sTem.get()) + " (GMT+8)" +\
+            "\nEnd Time: " + datetime.datetime.now().strftime('%Y-%m-') + '{:02d}'.format(eTed.get()) + ' ' + '{:02d}'.format(eTeh.get()) + ':' + '{:02d}'.format(eTem.get()) + " (GMT+8)" +\
+            "\nService Degradation: " + service_variable.get() +\
+            "\nSymptoms: GPM degradation on TEG0 " +\
+            "\nAction Taken: " + action_variable.get() +\
+            "\nRoot Cause: " + cause_variable.get() +\
+            "\nComms Manager: " + comms_variable.get() +\
+            "\nCrisis Manager: " + crisis_variable.get() +\
+            "\nEscalated by: " + ITOC_variable.get() + " (+886 226 560 700 ext 207)" +\
+            "\n" +\
+            "\nClik ID: " + clik_variable.get() +\
+            "\nCustomer Ref#: " + ref_variable.get() +\
+            "\n" +\
+            "\nJoin Microsoft Teams Chat: " + teams_variable.get()
+        win.clipboard_append(all_sen) # This is the process of copying to the clipboard
+    else:
+        all_sen = \
+            "Status: " + status_variable.get() +\
+            "\nSeverity: " + sev_variable.get() +\
+            "\nName: " + msglabel.get() +\
+            "\nAffecting System: " + msglabel.get() +\
+            "\nTier: " + tier_variable.get() +\
+            "\nOperator: Power_Asia, FCM88, TOP_USD2, Asia888, Poseidon, TH1GAMES, TOP_USD(GAMA), MaxPro, Metaltex" +\
+            "\nTime Elapsed: " + elapsed_variable.get() +\
+            "\nStart Time: " + datetime.datetime.now().strftime('%Y-%m-') + '{:02d}'.format(sTed.get()) + ' ' + '{:02d}'.format(sTeh.get()) + ':' + '{:02d}'.format(sTem.get()) + " (GMT+8)" +\
+            "\nEnd Time: " +\
+            "\nService Degradation: " + service_variable.get() +\
+            "\nSymptoms: GPM degradation on TEG0 " +\
+            "\nAction Taken: " + action_variable.get() +\
+            "\nRoot Cause: " + cause_variable.get() +\
+            "\nComms Manager: " + comms_variable.get() +\
+            "\nCrisis Manager: " + crisis_variable.get() +\
+            "\nEscalated by: " + ITOC_variable.get() + " (+886 226 560 700 ext 207)" +\
+            "\n" +\
+            "\nClik ID: " + clik_variable.get() +\
+            "\nCustomer Ref#: " + ref_variable.get() +\
+            "\n" +\
+            "\nJoin Microsoft Teams Chat: " + teams_variable.get()
+        win.clipboard_append(all_sen) # This is the process of copying to the clipboard
     
 
 
