@@ -674,6 +674,7 @@ def clear_All():  # https://stackoom.com/question/3mvSR https://stackoverflow.co
     clik_variable.set('')
     ref_variable.set('')
     teams_variable.set('N/A')
+    msglabel.set('')
     win.quit
 
 
