@@ -1,5 +1,11 @@
-from tkinter import Tk, Label, StringVar, OptionMenu, Entry, Text, Scrollbar, RIGHT, Y, Listbox, YES, Button, \
+from cProfile import label
+from dataclasses import InitVar
+from pathlib import PurePosixPath
+import string
+from tkinter import IntVar, Tk, Label, StringVar, OptionMenu, Entry, Text, Scrollbar, RIGHT, Y, Listbox, YES, Button, Variable, \
     mainloop, END, Frame, messagebox, TclError, WORD, Menu, font
+from turtle import color
+from setuptools import Command
 from tkcalendar import Calendar
 import bitlyshortener
 from bitlyshortener.exc import RequestError, ArgsError, ShortenerError
@@ -9,6 +15,7 @@ from datetime import datetime
 import klembord
 import json
 from jira import JIRA
+
 
 # Main Window
 master = Tk()
@@ -330,11 +337,149 @@ clock()
 service_degradation_label = Label(
     master, text="Service Degradation", font=("Ariel", 10, "bold"))
 service_degradation_label.place(x=160, y=45)
-service_degradation_variable = StringVar(master)
-service_degradation_variable.set(service_degradation2[0])  # default value
-service_degradation_options = OptionMenu(
-    master, service_degradation_variable, *service_degradation2)
-service_degradation_options.place(x=160, y=65)
+service_degradation_variable = []
+# service_degradation_variable = StringVar(master)
+# service_degradation_variable.set(service_degradation2[0])  # default value
+# service_degradation_options = OptionMenu(
+#     master, service_degradation_variable, *service_degradation2)
+# service_degradation_options.place(x=160, y=65)
+
+# Service Degradation V2
+# s1_num = IntVar()
+# s2_num = IntVar()
+# s3_num = IntVar()
+# s4_num = IntVar()
+# s5_num = IntVar()
+# s6_num = IntVar()
+# s7_num = IntVar()
+# s8_num = IntVar()
+# s9_num = IntVar()
+# s10_num = IntVar()
+# s11_num = IntVar()
+# s12_num = IntVar()
+
+s1 = Entry(master, text="10", width=4)
+s2 = Entry(master, width=4)
+s3 = Entry(master, width=4)
+s4 = Entry(master, width=4)
+s5 = Entry(master, width=4)
+s6 = Entry(master, width=4)
+s7 = Entry(master, width=4)
+s8 = Entry(master, width=4)
+s9 = Entry(master, width=4)
+s10 = Entry(master, width=4)
+s11 = Entry(master, width=4)
+s12 = Entry(master, width=4)
+
+
+test = Button(master, text="test",
+              command=lambda: test1111())
+test.place(x=280, y=120)
+
+all_degradation = []
+show_all = StringVar()
+show_all.set("")
+test3 = []
+
+
+def test1111():
+    service_degradation_variable = [s1.get(), s2.get(), s3.get(), s4.get(), s5.get(
+    ), s6.get(), s7.get(), s8.get(), s9.get(), s10.get(), s11.get(), s12.get()]
+    all_degradation = ""
+
+    for i in range(0, len(service_degradation_variable)):
+        if (int(service_degradation_variable[i]) > 0):
+            all_degradation = all_degradation + \
+                service_degradation_variable[i]+", "
+            print(str(service_degradation_variable[i]) + " > 0")
+        else:
+            all_degradation = "N/A"
+    show_all.set(all_degradation)
+
+
+test11 = Label(master, textvariable=show_all)
+test11.place(x=240, y=160)
+print(str(all_degradation) + " all_degradation")
+print(str(show_all) + " show_all")
+
+s1.place(x=160, y=65)
+s2.place(x=190, y=65)
+s3.place(x=220, y=65)
+s4.place(x=250, y=65)
+s5.place(x=280, y=65)
+s6.place(x=310, y=65)
+s7.place(x=160, y=85)
+s8.place(x=190, y=85)
+s9.place(x=220, y=85)
+s10.place(x=250, y=85)
+s11.place(x=280, y=85)
+s12.place(x=310, y=85)
+
+
+# Degradation Calculation %
+cal_degradation_label = Label(
+    master, text="Percent Calculation %", font=("Ariel", 10, "bold"))
+cal_degradation_label.place(x=200, y=300)
+
+cal_degradation1 = IntVar()
+cal_degradation1.set("NN")
+cal_degradation_entry_box1 = Entry(
+    master, textvariable=cal_degradation1, width=4)
+cal_degradation_entry_box1.place(x=240, y=320, height=20)
+
+cal_degradation2 = IntVar()
+cal_degradation2.set("NN")
+cal_degradation_entry_box2 = Entry(
+    master, textvariable=cal_degradation2, width=4)
+cal_degradation_entry_box2.place(x=280, y=320, height=20)
+
+cal_P = Button(master, text="Calculator",
+               command=lambda: degradationP())
+cal_P.place(x=240, y=340, height=20)
+
+PercentE = StringVar()
+
+
+def degradationP():
+    if float(cal_degradation1.get()) > float(cal_degradation2.get()):
+        Percent_result = ((float(cal_degradation1.get())-float(cal_degradation2.get())
+                           ) / float(cal_degradation1.get()))*100
+        PercentE = str(Percent_result).split(".")
+        if int(PercentE[0]) > 49:
+            Presult = Label(master, text=PercentE[0], font=(
+                "Ariel", 10, "bold"), fg="red")
+            pp = Label(master, text="%", font=("Ariel", 10, "bold"), fg="red")
+        elif int(PercentE[0]) <= 49 and int(PercentE[0]) >= 25:
+            Presult = Label(master, text=PercentE[0], font=(
+                "Ariel", 10, "bold"), fg="orange")
+            pp = Label(master, text="%", font=(
+                "Ariel", 10, "bold"), fg="orange")
+        else:
+            Presult = Label(master, text=PercentE[0], font=(
+                "Ariel", 10, "bold"), fg="black")
+            pp = Label(master, text="%", font=(
+                "Ariel", 10, "bold"), fg="black")
+    else:
+        Percent_result = ((float(cal_degradation2.get())-float(cal_degradation1.get())
+                           ) / float(cal_degradation2.get()))*100
+        PercentE = str(Percent_result).split(".")
+        if int(PercentE[0]) > 49:
+            Presult = Label(master, text=PercentE[0], font=(
+                "Ariel", 10, "bold"), fg="red")
+            pp = Label(master, text="%", font=("Ariel", 10, "bold"), fg="red")
+        elif int(PercentE[0]) <= 49 and int(PercentE[0]) >= 25:
+            Presult = Label(master, text=PercentE[0], font=(
+                "Ariel", 10, "bold"), fg="orange")
+            pp = Label(master, text="%", font=(
+                "Ariel", 10, "bold"), fg="orange")
+        else:
+            Presult = Label(master, text=PercentE[0], font=(
+                "Ariel", 10, "bold"), fg="black")
+            pp = Label(master, text="%", font=(
+                "Ariel", 10, "bold"), fg="black")
+    Presult.place(x=310, y=320, height=20)
+    pp.place(x=330, y=320, height=20)
+
 
 # Symptoms
 symptoms_label = Label(master, text="Symptoms", font=("Ariel", 10, "bold"))
@@ -359,7 +504,8 @@ action_taken_label.place(x=550, y=0)
 action_taken = Text(master, undo=True, wrap=WORD)
 action_taken.insert("3.0", "Internal testing showed no errors on our system. "
                            "ITOC is contacting relevant teams. "
-                           "ITOC is checking with the operator.")
+                           "ITOC is checking with the operator." "\n"
+                           "請依當下情況填寫,謝謝")
 action_taken.place(x=400, y=20, width=390, height=130)
 action_taken.get("1.0", "end-1c")
 
@@ -515,7 +661,7 @@ customer_ref_entry_box.place(x=400, y=380, height=25)
 
 # Teams Chat/Bitly shorten to list
 teams_chat_label = Label(master, text='Shorten to Bitly URL (needs "https://"): \n'
-                                      'Join Microsoft Teams Chat', justify="left", font=("Ariel", 10, "bold"))
+                         'Join Microsoft Teams Chat', justify="left", font=("Ariel", 10, "bold"))
 teams_chat_label.place(x=400, y=430, anchor="w")
 bitly_url = StringVar()
 bitly_url.set("N/A")
@@ -770,8 +916,10 @@ def print_template():
             T.insert("end", "Time Elapsed: ", "bold")
             T.insert("end",
                      f"""{time_elapsed(int(sel_date1[0:4]), int(sel_date1[5:7]), int(sel_date1[8:10]),
-                                       int(start_time1.get()), int(start_time2.get()), int(sel_date2[0:4]),
-                                       int(sel_date2[5:7]), int(sel_date2[8:10]), int(end_time1.get()),
+                                       int(start_time1.get()), int(
+                                           start_time2.get()), int(sel_date2[0:4]),
+                                       int(sel_date2[5:7]), int(
+                                           sel_date2[8:10]), int(end_time1.get()),
                                        int(end_time2.get()))}\n""")
             T.insert("end", "Start Time: ", "bold")
             T.insert("end",
