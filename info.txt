@@ -1,2 +1,6 @@
 串列list型態
 https://nkust.gitbook.io/python/untitled
+
+打包tkcalendar方法(第二層無法打包)
+https://tkcalendar.readthedocs.io/en/stable/howtos.html#pyinstaller
+https://stackoverflow.com/questions/23594048/how-can-i-specifiy-the-spec-file-in-pyinstaller
