@@ -1,0 +1,2 @@
+串列list型態
+https://nkust.gitbook.io/python/untitled
