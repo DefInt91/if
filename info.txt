@@ -9,6 +9,8 @@ https://tkcalendar.readthedocs.io/en/stable/howtos.html#pyinstaller
 https://stackoverflow.com/questions/23594048/how-can-i-specifiy-the-spec-file-in-pyinstaller
 
 tkinter用pyinstaller -F -w example.py
+HSTool 用的打包指令
+pyinstaller -F -w --onefile --hiddenimport babel.numbers 檔名.py
 
 進入env環境方式
 在python.py執行檔目錄下安裝 
