@@ -21,3 +21,6 @@ pyinstaller -F -w --onefile --hiddenimport babel.numbers 檔名.py
 在此處安裝要用的模組
 sample路徑：C:\Users\joyh\AppData\Local\Programs\Python\Python38-32\Scripts\hst\Scripts> 
 原文網址：https://kknews.cc/code/az6oqn6.html
+
+點一下清除entry
+https://stackoverflow.com/questions/34571635/entry-box-text-clear-when-pressed-tkinter
