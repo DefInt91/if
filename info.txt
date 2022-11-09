@@ -7,3 +7,15 @@ https://medium.com/ccclub/ccclub-python-for-beginners-tutorial-c15425c12009
 打包tkcalendar方法(第二層無法打包)
 https://tkcalendar.readthedocs.io/en/stable/howtos.html#pyinstaller
 https://stackoverflow.com/questions/23594048/how-can-i-specifiy-the-spec-file-in-pyinstaller
+
+tkinter用pyinstaller -F -w example.py
+
+進入env環境方式
+在python.py執行檔目錄下安裝 
+[pip install virtualenv]
+安裝完後進到下一層\scripts 建立env環境,輸入
+[virtualenv.exe 環境名隨意]
+建立成功後再進到環境名下的scripts \環境名\scripts
+在此處安裝要用的模組
+sample路徑：C:\Users\joyh\AppData\Local\Programs\Python\Python38-32\Scripts\hst\Scripts> 
+原文網址：https://kknews.cc/code/az6oqn6.html
