@@ -7,7 +7,7 @@ https://www.zhihu.com/search?hybrid_search_extra=%7B%22sourceType%22%3A%22answer
 安裝完後進到下一層\scripts 建立env環境,輸入
 [virtualenv.exe 環境名隨意]
 建立成功後再進到環境名下的scripts \環境名\scripts
-在此處安裝要用的模組
+在此處安裝要用的模組,py檔也是放在這一層
 sample路徑：C:\Users\joyh\AppData\Local\Programs\Python\Python38-32\Scripts\hst\Scripts> 
 原文網址：https://kknews.cc/code/az6oqn6.html
 
