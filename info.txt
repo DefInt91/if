@@ -14,6 +14,8 @@ sample路徑：C:\Users\joyh\AppData\Local\Programs\Python\Python38-32\Scripts\h
 
 簡易安裝env環境
 https://blog.csdn.net/geovindu/article/details/140135703
+可能会有权限问题，使用以下指令
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 串列list型態
 https://nkust.gitbook.io/python/untitled
